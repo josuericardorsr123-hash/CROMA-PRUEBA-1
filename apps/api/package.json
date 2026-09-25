@@ -1,0 +1,25 @@
+{
+  "name": "@em/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API HTTP del sistema (REST + SSE), autenticación y trabajador de fondo",
+  "main": "src/main.ts",
+  "dependencies": {
+    "@em/dominio": "*",
+    "@em/motores": "*",
+    "@em/croma": "*",
+    "@em/fuentes": "*",
+    "@em/ia": "*",
+    "@em/documentos": "*",
+    "@em/docgen": "*",
+    "@em/almacen": "*",
+    "@em/pipeline": "*",
+    "fastify": "^5.12.5",
+    "@fastify/multipart": "^10.1.2",
+    "@fastify/static": "^10.1.4",
+    "@fastify/rate-limit": "^11.2.0",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  }
+}

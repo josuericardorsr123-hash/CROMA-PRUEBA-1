@@ -1,0 +1,17 @@
+{
+  "name": "@em/croma",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Gateway hacia Croma (MCP): descubrimiento, capacidades colombianas, resiliencia, caché y procedencia",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@em/dominio": "*",
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "zod": "^4.6.5"
+  }
+}

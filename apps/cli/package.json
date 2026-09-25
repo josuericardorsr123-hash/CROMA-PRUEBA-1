@@ -1,0 +1,19 @@
+{
+  "name": "@em/cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI em: procesar expedientes, operar Croma, validar el grafo y ejecutar la demo",
+  "main": "src/main.ts",
+  "dependencies": {
+    "@em/dominio": "*",
+    "@em/motores": "*",
+    "@em/croma": "*",
+    "@em/fuentes": "*",
+    "@em/ia": "*",
+    "@em/documentos": "*",
+    "@em/docgen": "*",
+    "@em/almacen": "*",
+    "@em/pipeline": "*"
+  }
+}
