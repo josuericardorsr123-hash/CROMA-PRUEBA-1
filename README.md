@@ -16,7 +16,7 @@ Plataforma para procesar expedientes de **cualquier proceso del ordenamiento jur
 npm ci
 npm run demo                       # expediente ficticio de punta a punta → ./salida-demo/*.docx
 npm run demo:api                   # API + consola web con Croma simulado (usuario: abogado@ejemplo.test, tenant: demo)
-npm run verificar                  # tipos + 142 pruebas + validación del grafo
+npm run verificar                  # tipos + 144 pruebas + validación del grafo
 ```
 
 Requisitos: Node 22.12 o superior. LibreOffice Writer, poppler-utils y qpdf se usan para leer PDF, rasterizar escaneos y paginar el índice. Sin ellos, el sistema degrada y lo declara. Con Docker:

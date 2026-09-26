@@ -51,6 +51,36 @@ function usoDe(u: { input_tokens?: number | null; output_tokens?: number | null;
   return { entrada: u?.input_tokens ?? 0, salida: u?.output_tokens ?? 0, cacheEscritura: u?.cache_creation_input_tokens ?? 0, cacheLectura: u?.cache_read_input_tokens ?? 0 };
 }
 
+type EsquemaJson = { type?: string | string[]; properties?: Record<string, EsquemaJson>; required?: string[]; items?: EsquemaJson; enum?: unknown[] };
+
+const tipoDe = (v: unknown) => (v === null ? "null" : Array.isArray(v) ? "array" : typeof v === "number" ? (Number.isInteger(v) ? "integer" : "number") : typeof v);
+
+/**
+ * Validación estructural de la entrada de una herramienta contra su esquema
+ * JSON (tipos, obligatorios, enumeraciones, anidados). Con la entrada en
+ * streaming, un JSON truncado puede llegar parseado a medias: se detecta aquí.
+ */
+export function entradaInvalida(esquema: unknown, v: unknown, ruta = "entrada"): string | null {
+  const e = (esquema ?? {}) as EsquemaJson;
+  const tipos = e.type === undefined ? [] : Array.isArray(e.type) ? e.type : [e.type];
+  const t = tipoDe(v);
+  if (tipos.length && !tipos.some((x) => x === t || (x === "number" && t === "integer"))) return `${ruta}: se esperaba ${tipos.join("|")}, llegó ${t}`;
+  if (e.enum && !e.enum.some((x) => JSON.stringify(x) === JSON.stringify(v))) return `${ruta}: valor fuera de la enumeración`;
+  if (t === "object") {
+    const o = v as Record<string, unknown>;
+    for (const r of e.required ?? []) if (o[r] === undefined) return `${ruta}.${r}: obligatorio`;
+    for (const [k, sub] of Object.entries(e.properties ?? {})) if (o[k] !== undefined) {
+      const m = entradaInvalida(sub, o[k], `${ruta}.${k}`);
+      if (m) return m;
+    }
+  }
+  if (t === "array" && e.items) for (const [i, x] of (v as unknown[]).entries()) {
+    const m = entradaInvalida(e.items, x, `${ruta}[${i}]`);
+    if (m) return m;
+  }
+  return null;
+}
+
 /**
  * Proveedor Claude (API de Anthropic, SDK oficial). Toda petición va en
  * streaming (salidas largas sin agotar tiempos HTTP), con pensamiento adaptativo,
@@ -142,7 +172,8 @@ export class LlmAnthropic implements LlmPort {
 
   /** Bucle de herramientas (manual, para interceptar cada llamada y registrar su procedencia). */
   async agente(p: PeticionAgente): Promise<RespuestaAgente> {
-    const herramientas = p.herramientas.map((h) => ({ name: h.nombre, description: h.descripcion, input_schema: h.esquema }));
+    // Entrada de herramientas en streaming: el cliente valida cada entrada antes de ejecutarla.
+    const herramientas = p.herramientas.map((h) => ({ name: h.nombre, description: h.descripcion, input_schema: h.esquema, eager_input_streaming: true }));
     const mensajes: Array<{ role: "user" | "assistant"; content: unknown }> = [{ role: "user", content: bloquesUsuario(p.contexto, undefined, p.instruccion) }];
     const trazas: TrazaHerramienta[] = [];
     let uso = USO_CERO;
@@ -173,7 +204,10 @@ export class LlmAnthropic implements LlmPort {
         const h = p.herramientas.find((x) => x.nombre === u.name);
         let r: { contenido: string; esError?: boolean };
         try {
-          r = h ? await h.ejecutar(u.input) : { contenido: `Herramienta desconocida: ${u.name}`, esError: true };
+          const invalida = h ? entradaInvalida(h.esquema, u.input) : null;
+          r = !h ? { contenido: `Herramienta desconocida: ${u.name}`, esError: true }
+            : invalida ? { contenido: `INVALID_JSON: la entrada de ${u.name} no cumple su esquema (${invalida}). Reenvíe la llamada completa.`, esError: true }
+            : await h.ejecutar(u.input);
         } catch (e) {
           r = { contenido: `Error ejecutando ${u.name}: ${String((e as Error).message ?? e)}`, esError: true };
         }

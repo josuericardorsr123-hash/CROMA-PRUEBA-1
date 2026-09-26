@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import type Anthropic from "@anthropic-ai/sdk";
-import { aEsquemaEstructurado, ErrorIA, LlmAnthropic, LlmSimulado } from "../src";
+import { aEsquemaEstructurado, entradaInvalida, ErrorIA, LlmAnthropic, LlmSimulado } from "../src";
 
 const Esquema = z.object({
   tipologia: z.string().min(3),
@@ -81,6 +81,33 @@ describe("proveedor Claude", () => {
     const segundo = (enviados[1]!.messages as any[]);
     expect(segundo[2].content).toHaveLength(2);
     expect(segundo[2].content[0].type).toBe("tool_result");
+  });
+});
+
+describe("entrada de herramientas en streaming", () => {
+  it("valida tipos, obligatorios, enumeraciones y anidados", () => {
+    const esq = { type: "object", required: ["a"], properties: { a: { type: "string", enum: ["x", "y"] }, n: { type: "integer" }, l: { type: "array", items: { type: "object", required: ["id"] } } } };
+    expect(entradaInvalida(esq, { a: "x", n: 2, l: [{ id: 1 }] })).toBeNull();
+    expect(entradaInvalida(esq, { a: "z" })).toMatch(/enumeración/);
+    expect(entradaInvalida(esq, { a: "x", n: 1.5 })).toMatch(/entrada\.n/);
+    expect(entradaInvalida(esq, { a: "x", l: [{}] })).toMatch(/entrada\.l\[0\]\.id/);
+    expect(entradaInvalida(esq, "texto")).toMatch(/se esperaba object/);
+  });
+
+  it("declara eager_input_streaming y no ejecuta una entrada que no cumple el esquema", async () => {
+    const { cliente, enviados } = clienteFalso([
+      { stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "buscar", input: {} } as any] },
+      { stop_reason: "tool_use", content: [{ type: "tool_use", id: "t2", name: "buscar", input: { q: "a" } } as any] },
+      { stop_reason: "end_turn", content: [{ type: "text", text: "listo" } as any] },
+    ]);
+    const ejecutadas: unknown[] = [];
+    const r = await new LlmAnthropic({ cliente }).agente({ tarea: "investigacion", sistema: "s", instruccion: "i", herramientas: [{ nombre: "buscar", descripcion: "busca", esquema: { type: "object", properties: { q: { type: "string" } }, required: ["q"] }, ejecutar: async (e) => (ejecutadas.push(e), { contenido: "ok" }) }] });
+    expect(r.texto).toBe("listo");
+    expect((enviados[0]!.tools as any[])[0].eager_input_streaming).toBe(true);
+    expect(ejecutadas).toEqual([{ q: "a" }]);
+    const res = (enviados[1]!.messages as any[])[2].content[0];
+    expect(res).toMatchObject({ type: "tool_result", is_error: true });
+    expect(res.content).toMatch(/INVALID_JSON.*entrada\.q: obligatorio/);
   });
 });
 
