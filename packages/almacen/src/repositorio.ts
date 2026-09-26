@@ -29,6 +29,16 @@ export interface Usuario {
   creado: string;
 }
 
+/** Datos profesionales con que se firman las piezas radicables (se guardan cifrados). */
+export interface PerfilProfesional {
+  identificacion: string | null;
+  tarjetaProfesional: string | null;
+  correoRegistroNacional: string | null;
+  telefono: string | null;
+  direccion: string | null;
+  ciudad: string | null;
+}
+
 export interface ResumenExpediente {
   id: string;
   tenantId: string;
@@ -179,6 +189,20 @@ export class RepositorioSql {
   async cambiarEstadoUsuario(tenantId: string, id: string, activo: boolean, actor: string): Promise<void> {
     await this.conexion.ejecutar("UPDATE usuarios SET activo = ?, actualizado = ? WHERE tenant_id = ? AND id = ?", [activo ? 1 : 0, this.ahora(), tenantId, id]);
     await this.registrar(tenantId, { actor, accion: activo ? "usuario.activado" : "usuario.desactivado", objeto: id, detalle: null });
+  }
+
+  async actualizarPerfil(tenantId: string, id: string, perfil: PerfilProfesional, actor: string): Promise<void> {
+    const cifrado = this.cifrador.cifrarTexto(JSON.stringify(perfil), "secreto", `${tenantId}/perfil/${id}`);
+    const filas = await this.conexion.ejecutar("UPDATE usuarios SET perfil = ?, tarjeta_profesional = ?, actualizado = ? WHERE tenant_id = ? AND id = ?", [cifrado, perfil.tarjetaProfesional, this.ahora(), tenantId, id]);
+    if (filas !== 1) throw new ErrorDominio("USUARIO_INEXISTENTE", `No existe el usuario ${id}.`);
+    await this.registrar(tenantId, { actor, accion: "usuario.perfil_actualizado", objeto: id, detalle: null });
+  }
+
+  async perfilProfesional(tenantId: string, id: string): Promise<PerfilProfesional | null> {
+    const f = (await this.conexion.consultar("SELECT perfil, tarjeta_profesional FROM usuarios WHERE tenant_id = ? AND id = ?", [tenantId, id]))[0];
+    if (!f) return null;
+    if (!f.perfil) return { identificacion: null, tarjetaProfesional: (f.tarjeta_profesional as string | null) ?? null, correoRegistroNacional: null, telefono: null, direccion: null, ciudad: null };
+    return JSON.parse(this.cifrador.descifrarTexto(b(f.perfil), "secreto", `${tenantId}/perfil/${id}`)) as PerfilProfesional;
   }
 
   async cambiarClave(tenantId: string, id: string, nueva: string, actor: string): Promise<void> {

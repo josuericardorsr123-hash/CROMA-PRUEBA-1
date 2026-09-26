@@ -99,3 +99,50 @@ export function pdfDeImagenesPng(pngs: Buffer[]): Buffer {
   });
   return ensamblar(objetos);
 }
+
+/** Dimensiones y componentes de color de un JPEG (marcadores SOF0 a SOF15, salvo DHT/JPG/DAC). */
+export function leerJpeg(jpeg: Buffer): { ancho: number; alto: number; componentes: number } {
+  if (jpeg[0] !== 0xff || jpeg[1] !== 0xd8) throw new Error("No es un JPEG");
+  let p = 2;
+  while (p + 9 < jpeg.length) {
+    if (jpeg[p] !== 0xff) {
+      p += 1;
+      continue;
+    }
+    const marcador = jpeg[p + 1]!;
+    if (marcador === 0xd8 || marcador === 0x01 || (marcador >= 0xd0 && marcador <= 0xd7)) {
+      p += 2;
+      continue;
+    }
+    const largo = jpeg.readUInt16BE(p + 2);
+    if (marcador >= 0xc0 && marcador <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marcador)) {
+      return { alto: jpeg.readUInt16BE(p + 5), ancho: jpeg.readUInt16BE(p + 7), componentes: jpeg[p + 9]! };
+    }
+    p += 2 + largo;
+  }
+  throw new Error("JPEG sin marcador de inicio de cuadro (SOF)");
+}
+
+/** PDF con una imagen JPEG por página, incrustada sin recomprimir (DCTDecode). */
+export function pdfDeImagenesJpeg(jpegs: Buffer[]): Buffer {
+  const objetos: Array<Buffer | string> = [];
+  objetos.push("<< /Type /Catalog /Pages 2 0 R >>");
+  objetos.push(`<< /Type /Pages /Kids [${jpegs.map((_, i) => `${3 + i * 3} 0 R`).join(" ")}] /Count ${jpegs.length} >>`);
+  jpegs.forEach((jpeg, i) => {
+    const info = leerJpeg(jpeg);
+    const espacio = info.componentes === 1 ? "DeviceGray" : info.componentes === 4 ? "DeviceCMYK" : "DeviceRGB";
+    const escala = Math.min(612 / info.ancho, 792 / info.alto);
+    const w = Math.round(info.ancho * escala);
+    const h = Math.round(info.alto * escala);
+    const contenido = Buffer.from(`q ${w} 0 0 ${h} ${Math.round((612 - w) / 2)} ${Math.round((792 - h) / 2)} cm /Im0 Do Q`, "latin1");
+    const base = 3 + i * 3;
+    objetos.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /XObject << /Im0 ${base + 2} 0 R >> >> /Contents ${base + 1} 0 R >>`);
+    objetos.push(Buffer.concat([Buffer.from(`<< /Length ${contenido.length} >>\nstream\n`, "latin1"), contenido, Buffer.from("\nendstream", "latin1")]));
+    objetos.push(Buffer.concat([
+      Buffer.from(`<< /Type /XObject /Subtype /Image /Width ${info.ancho} /Height ${info.alto} /ColorSpace /${espacio} /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`, "latin1"),
+      jpeg,
+      Buffer.from("\nendstream", "latin1"),
+    ]));
+  });
+  return ensamblar(objetos);
+}

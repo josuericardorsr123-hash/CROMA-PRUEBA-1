@@ -135,6 +135,7 @@ export const LecturaPagina = z.object({
   transcripcion: z.string(),
   legibilidad: Legibilidad,
   relevancia: z.enum(["RELEVANTE", "POSIBLEMENTE_AJENO"]).default("RELEVANTE"),
+  origenFisico: z.enum(["ESCANEADO", "ELECTRONICO", "FOTOGRAFIA", "DESCONOCIDO"]).default("DESCONOCIDO"),
   observaciones: z.array(z.string()).default([]),
 });
 export type LecturaPagina = z.infer<typeof LecturaPagina>;
@@ -424,9 +425,43 @@ export const FilaProbatoria = z.object({
 });
 export type FilaProbatoria = z.infer<typeof FilaProbatoria>;
 
+/** Silogismo de subsunción (f5): premisa normativa verificada + premisa fáctica soportada → conclusión etiquetada. */
+export const BloqueSubsuncion = z.object({
+  problemaId: z.string(),
+  regla: z.string(),
+  fuenteIds: z.array(z.string()).default([]),
+  hechoIds: z.array(z.string()).default([]),
+  premisaFactica: z.string(),
+  conclusion: z.string(),
+  etiqueta: EtiquetaConfianza,
+  eslabonMasDebil: z.string().nullable().default(null),
+  figurasDistinguidas: z.array(z.object({ figura: z.string(), noSeConfundeCon: z.string(), razon: z.string() })).default([]),
+});
+export type BloqueSubsuncion = z.infer<typeof BloqueSubsuncion>;
+
+export const RequisitoProcedibilidad = z.object({
+  id: z.string(),
+  requisito: z.string(),
+  estado: z.enum(["EXIGIBLE", "NO_EXIGIBLE", "FACULTATIVO", "INCIERTO"]),
+  razon: z.string(),
+  norma: z.string(),
+  url: z.string().nullable().default(null),
+  verificacion: z.string(),
+  consecuenciaOmision: z.string(),
+});
+
+export const HallazgoHabilitacion = z.object({
+  codigo: z.string(),
+  tipo: z.enum(["IMPEDIMENTO", "SUBSANABLE", "ADVERTENCIA"]),
+  descripcion: z.string(),
+  fundamento: z.string(),
+  accion: z.string(),
+});
+
 export const Analisis = z.object({
   resumenCaso: z.string().default(""),
   area: AreaDerecho.nullable().default(null),
+  areasConcurrentes: z.array(AreaDerecho).default([]),
   materia: z.string().default(""),
   tipoAsunto: z.string().default(""),
   rolCliente: RolCliente.nullable().default(null),
@@ -472,6 +507,16 @@ export const Analisis = z.object({
     observaciones: z.array(z.string()),
   }).nullable().default(null),
   zonasGrises: z.array(z.string()).default([]),
+  subsuncion: z.array(BloqueSubsuncion).default([]),
+  /** Ausencias declaradas y límites de cada módulo (p. ej. fuente oficial no disponible: NO VERIFICADO). */
+  avisos: z.array(z.object({ modulo: z.string(), texto: z.string(), gravedad: Gravedad })).default([]),
+  procedibilidad: z.array(RequisitoProcedibilidad).default([]),
+  habilitacion: z.object({
+    requierePostulacion: z.boolean(),
+    habilitada: z.boolean(),
+    requiereAccionDelAbogado: z.boolean(),
+    hallazgos: z.array(HallazgoHabilitacion),
+  }).nullable().default(null),
 });
 export type Analisis = z.infer<typeof Analisis>;
 
@@ -598,6 +643,45 @@ export const Ejecucion = z.object({
 });
 export type Ejecucion = z.infer<typeof Ejecucion>;
 
+/** Archivo cargado y aún no recibido por la Fase 1 (su blob es el original tal como llegó). */
+export const Entrante = z.object({
+  id: z.string(),
+  blobId: z.string(),
+  nombre: z.string(),
+  rutaRelativa: z.string(),
+  bytes: z.number().int().nonnegative(),
+  sha256: z.string(),
+  cargadoEn: InstanteISO,
+  cargadoPor: z.string(),
+  procesado: z.boolean().default(false),
+  procesadoEn: InstanteISO.nullable().default(null),
+});
+export type Entrante = z.infer<typeof Entrante>;
+
+/**
+ * Decisión o aporte expreso del ABOGADO (USUARIO) que el pipeline consume al
+ * reanudar: las compuertas son funciones del estado del expediente y de estas
+ * instrucciones, de modo que toda decisión humana queda registrada.
+ */
+export const AccionAbogado = z.enum([
+  "CONTINUAR_CON_VACIOS", "APORTAR_FUENTE", "RETIRAR_CITA", "APROBAR", "DEVOLVER", "DECLARAR_HABILITACION",
+  "ASUMIR_RIESGO", "CONFIRMAR_ENTIDAD", "CORREGIR_ENTIDAD", "CONFIRMAR_ANALOGIA", "RECHAZAR_ANALOGIA", "REANUDAR",
+]);
+export type AccionAbogado = z.infer<typeof AccionAbogado>;
+
+export const Instruccion = z.object({
+  id: z.string(),
+  accion: AccionAbogado,
+  nodo: z.string().nullable().default(null),
+  motivo: z.string().default(""),
+  datos: z.unknown().optional(),
+  usuarioId: z.string(),
+  emitidaEn: InstanteISO,
+  consumida: z.boolean().default(false),
+  consumidaEn: InstanteISO.nullable().default(null),
+});
+export type Instruccion = z.infer<typeof Instruccion>;
+
 export const EstadoExpediente = z.enum([
   "BORRADOR", "EN_PROCESO", "REQUIERE_ACCION", "EN_REVISION", "APROBADO", "REMITIDO", "ERROR", "ARCHIVADO",
 ]);
@@ -610,8 +694,19 @@ export const ContextoInicial = z.object({
   notasAbogado: z.string().nullable().default(null),
   area: AreaDerecho.nullable().default(null),
   radicados: z.array(z.string()).default([]),
-  /** Consultas de debida diligencia autorizadas por el ABOGADO (USUARIO) (finalidad, Ley 1581 de 2012). */
-  diligenciaAutorizada: z.array(z.string()).default([]),
+  /**
+   * Debida diligencia autorizada por el ABOGADO (USUARIO), sujeto por sujeto,
+   * con capacidades y finalidad expresas (Ley 1581 de 2012, arts. 4 y 9). Las
+   * consultas de registros públicos no personales (RUES, RUT, RUNT, SIMIT, CUFE)
+   * se hacen solo si el dato consta en el expediente.
+   */
+  diligencia: z.array(z.object({
+    sujeto: z.string(),
+    identificacion: z.string().nullable().default(null),
+    tipoIdentificacion: z.enum(["CC", "CE", "NIT", "PASAPORTE"]).nullable().default(null),
+    capacidades: z.array(z.string()).default([]),
+    finalidad: z.string(),
+  })).default([]),
 });
 export type ContextoInicial = z.infer<typeof ContextoInicial>;
 
@@ -625,6 +720,8 @@ export const Expediente = z.object({
   version: z.number().int().nonnegative(),
   estado: EstadoExpediente,
   contexto: ContextoInicial,
+  entrantes: z.array(Entrante).default([]),
+  instrucciones: z.array(Instruccion).default([]),
   archivos: z.array(ArchivoOriginal).default([]),
   lecturas: z.array(LecturaPagina).default([]),
   piezas: z.array(PiezaDocumental).default([]),

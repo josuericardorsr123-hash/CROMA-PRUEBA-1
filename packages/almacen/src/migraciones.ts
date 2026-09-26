@@ -118,6 +118,11 @@ CREATE TABLE IF NOT EXISTS memoria (
 );
 CREATE INDEX IF NOT EXISTS ix_memoria_area ON memoria (tenant_id, area, tipo)`,
   },
+  {
+    version: 2,
+    descripcion: "Perfil profesional cifrado del ABOGADO (USUARIO): identificación, correo del Registro Nacional de Abogados y datos de notificación",
+    sql: `ALTER TABLE usuarios ADD COLUMN perfil {{BIN}}`,
+  },
 ];
 
 /** Identificador del candado consultivo de PostgreSQL que serializa migraciones entre instancias. */

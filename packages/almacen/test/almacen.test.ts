@@ -136,7 +136,7 @@ describe.each(motores)("repositorio sobre %s", (_nombre, preparar) => {
     const p = await preparar();
     limpiar = p.limpiar;
     repo = new RepositorioSql(abrirConexion(p.url), cifrador, { scrypt: RAPIDO, versionesRetenidas: 3, reloj: () => reloj });
-    expect(await repo.migrar()).toEqual([1]);
+    expect(await repo.migrar()).toEqual([1, 2]);
     expect(await repo.migrar()).toEqual([]);
     await repo.asegurarTenant("t1", "Despacho de prueba");
     await repo.asegurarTenant("t2", "Otro despacho");
@@ -162,6 +162,10 @@ describe.each(motores)("repositorio sobre %s", (_nombre, preparar) => {
     expect((await repo.autenticar("t1", "abogado@ejemplo.test", "clave-segura-2026")).motivo).toBe("BLOQUEADO");
     reloj = new Date(reloj.getTime() + 16 * 60_000);
     expect((await repo.autenticar("t1", "abogado@ejemplo.test", "clave-segura-2026")).motivo).toBe("OK");
+    await repo.actualizarPerfil("t1", u.id, { identificacion: "C.C. 0000000", tarjetaProfesional: "T.P. 000000", correoRegistroNacional: "abogado@ejemplo.test", telefono: null, direccion: "Calle Ficticia 1", ciudad: "Bogotá D.C." }, "admin");
+    expect((await repo.perfilProfesional("t1", u.id))!.direccion).toBe("Calle Ficticia 1");
+    const crudoPerfil = await repo.conexion.consultar<{ perfil: Buffer }>("SELECT perfil FROM usuarios WHERE id = ?", [u.id]);
+    expect(Buffer.from(crudoPerfil[0]!.perfil).includes(Buffer.from("Ficticia"))).toBe(false);
     await repo.cambiarEstadoUsuario("t1", u.id, false, "admin");
     expect((await repo.autenticar("t1", "abogado@ejemplo.test", "clave-segura-2026")).motivo).toBe("INACTIVO");
   });
