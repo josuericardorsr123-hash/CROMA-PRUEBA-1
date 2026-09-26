@@ -12,3 +12,4 @@ apps/web/dist/
 .DS_Store
 # Expedientes reales nunca se versionan (Ley 1581 de 2012, secreto profesional art. 74 C.P.)
 expedientes/
+salida-demo/

@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
 import { abrirAlmacen } from "@em/almacen";
 import type { Registro } from "@em/croma";
-import { serviciosCompartidos } from "@em/pipeline";
+import { randomBytes } from "node:crypto";
+import { type Compartidos, PERFIL_DEMO, prepararDemostracion, serviciosCompartidos } from "@em/pipeline";
 import { construirApp } from "./app";
 import { crearAutenticador, secretoDesdeEntorno } from "./autenticacion";
 import { BusEventos } from "./eventos";
@@ -18,7 +19,24 @@ const registro: Registro = {
 };
 
 const almacen = await abrirAlmacen();
-const compartidos = serviciosCompartidos({ registro });
+const demostracion = process.env.EM_MODO === "demostracion";
+if (demostracion && process.env.NODE_ENV === "production" && process.env.EM_PERMITIR_DEMO !== "1") throw new Error("EM_MODO=demostracion no se admite con NODE_ENV=production (use EM_PERMITIR_DEMO=1 para una instancia de muestra aislada).");
+let cerrarDemo: (() => Promise<void>) | null = null;
+let compartidos: Compartidos;
+if (demostracion) {
+  // Croma simulado (MCP real sobre datos ficticios) e IA de demostración: sin claves ni datos reales.
+  const ent = await prepararDemostracion();
+  cerrarDemo = ent.cerrar;
+  const s = ent.servicios;
+  compartidos = { llm: s.llm, croma: s.croma, repositorio: s.repositorio, resolutor: s.resolutor, config: s.config, registro, advertencias: ["MODO DEMOSTRACIÓN: datos ficticios, fuentes simuladas."] };
+  const clave = process.env.EM_CLAVE_DEMO ?? randomBytes(9).toString("base64url");
+  await almacen.repo.asegurarTenant("demo", "Despacho de demostración");
+  if (!(await almacen.repo.usuarioPorCorreo("demo", PERFIL_DEMO.correo))) {
+    const u = await almacen.repo.crearUsuario({ tenantId: "demo", correo: PERFIL_DEMO.correo, nombre: PERFIL_DEMO.nombre, rol: "ABOGADO", clave, tarjetaProfesional: PERFIL_DEMO.tarjetaProfesional });
+    await almacen.repo.actualizarPerfil("demo", u.id, { identificacion: PERFIL_DEMO.identificacion, tarjetaProfesional: PERFIL_DEMO.tarjetaProfesional, correoRegistroNacional: PERFIL_DEMO.correoRegistroNacional, telefono: null, direccion: PERFIL_DEMO.direccion, ciudad: PERFIL_DEMO.ciudad }, "SISTEMA");
+    registro.warn("demostracion.usuario", { tenant: "demo", correo: PERFIL_DEMO.correo, clave: process.env.EM_CLAVE_DEMO ? "(EM_CLAVE_DEMO)" : clave });
+  }
+} else compartidos = serviciosCompartidos({ registro });
 const { secreto, advertencia } = secretoDesdeEntorno(process.env);
 for (const w of [...almacen.advertencias, ...compartidos.advertencias, ...(advertencia ? [advertencia] : [])]) registro.warn("arranque.aviso", { detalle: w });
 
@@ -43,6 +61,7 @@ for (const senal of ["SIGINT", "SIGTERM"] as const) {
     await app.close();
     await trabajador?.detener();
     await compartidos.croma.cerrar();
+    await cerrarDemo?.();
     await almacen.cerrar();
     process.exit(0);
   });
