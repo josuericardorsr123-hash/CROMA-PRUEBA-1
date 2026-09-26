@@ -17,6 +17,7 @@ export * from "./ejecutor";
 export * from "./esquemas";
 export * from "./informe";
 export * from "./auditoria";
+export * from "./servicios";
 export { SISTEMA } from "./ia";
 export { etiquetar, verificarAfirmaciones, disociar } from "./nodos/gobernanza";
 export { segmentar } from "./nodos/organizacion";

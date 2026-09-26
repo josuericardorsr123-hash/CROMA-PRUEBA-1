@@ -119,6 +119,9 @@ describe("pipeline completo sobre el expediente de demostración", () => {
     expect(ip.encabezado).toBe("");
     expect(ip.texto).not.toContain("ADVERTENCIA");
     expect(ip.texto).toContain("ABOGADO DE DEMOSTRACIÓN");
+    expect(ip.texto).not.toMatch(/\[NOMBRE\]|\[C\.C\. No\.\]|\[T\.P\. No\.\]/);
+    expect(ip.texto).toContain("domiciliada en Bogotá D.C.");
+    expect(ip.texto).toMatch(/1 de marzo de 2023 la PERSONA NATURAL FICTICIA suscribió/);
     expect(exp.entregables.some((e) => e.tipo === "INFORME_TECNICO" && e.modo === "RADICABLE")).toBe(true);
     expect(exp.decisiones.at(-1)).toMatchObject({ compuerta: "g_revision", decision: "si", actor: "usr_demo" });
   });

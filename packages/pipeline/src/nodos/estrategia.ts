@@ -86,9 +86,23 @@ export function firmaPieza(p: PerfilAbogado | null): DocumentoPieza["firma"] {
   };
 }
 
+/** Completa los campos abiertos del apoderado con el perfil verificado del ABOGADO (USUARIO); los que no consten quedan abiertos. */
+export function completarCampos(texto: string, p: PerfilAbogado | null): string {
+  if (!p) return texto;
+  const campos: Array<[RegExp, string | null]> = [
+    [/\[NOMBRE\]/g, p.nombre || null],
+    [/\[C\.C\. No\.\]/g, p.identificacion?.replace(/^C\.?C\.?\s*/i, "") || null],
+    [/\[T\.P\. No\.\]/g, p.tarjetaProfesional?.replace(/^T\.?P\.?\s*/i, "") || null],
+    [/\[CORREO\]/g, p.correoRegistroNacional || p.correo || null],
+    [/\[DIRECCI[ÓO]N\]/g, p.direccion || null],
+  ];
+  return campos.reduce((t, [re, v]) => (v ? t.replace(re, v) : t), texto);
+}
+
 /** Construye el modelo de la pieza a partir del borrador redactado (se reutiliza en la versión radicable). */
 export function documentoPieza(ctx: ContextoNodo, g: PiezaGuardada, modo: DocumentoPieza["modo"], p: PerfilAbogado | null): DocumentoPieza {
-  const r = g.redactada;
+  const c = (t: string) => completarCampos(t, p);
+  const r = { ...g.redactada, apertura: c(g.redactada.apertura), cierre: c(g.redactada.cierre), secciones: g.redactada.secciones.map((s) => ({ ...s, parrafos: s.parrafos.map((x) => ({ ...x, texto: c(x.texto) })) })) };
   const cuerpo: BloquePieza[] = r.secciones.map((s) => ({
     titulo: s.titulo, numerado: "ROMANO",
     bloques: s.numerarParrafos

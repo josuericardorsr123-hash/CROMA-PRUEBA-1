@@ -81,7 +81,7 @@ function actoresDe(t: string): Array<{ nombre: string; rol: string; identificaci
 function leerPagina(n: number, texto: string, visual: boolean) {
   const t = texto.trim();
   const tipologia = tipologiaDe(t);
-  const suscripcion = /suscrito[^.]*?(\d{1,2} de [a-záéíóú]+ de \d{4})/i.exec(t)?.[1];
+  const suscripcion = /suscrito[\s\S]{0,60}?(\d{1,2} de [a-záéíóú]+ de \d{4})/i.exec(t)?.[1];
   const fecha = (suscripcion ? interpretarFecha(suscripcion) : null) ?? (tipologia === "CERTIFICADO_EXISTENCIA" ? fechas(t)[0] ?? null : fechas(t)[0] ?? null);
   const titulo = limpiar(t.split("\n").find((l) => l.trim()) ?? "") || null;
   return {
@@ -121,7 +121,7 @@ function consolidar(p: PeticionEstructurada<unknown>) {
     nombre: a.nombre, identificacion: a.identificacion, tipoPersona: /S\.A\.S\.|LTDA|S\.A\./.test(a.nombre) ? "JURIDICA" as const : "NATURAL" as const,
     calidad: /SOCIEDAD/.test(a.nombre) ? (ejecutivo ? "Acreedora beneficiaria del título" : "Parte") : /NATURAL/.test(a.nombre) ? (ejecutivo ? "Deudora suscriptora del título" : "Parte") : "Representante legal de la acreedora",
     esCliente: /SOCIEDAD/.test(a.nombre), representante: /SOCIEDAD/.test(a.nombre) ? [...actores.keys()].find((k) => /PERSONA FICTICIA/.test(k) && !/NATURAL/.test(k)) ?? null : null,
-    apoderado: null, correo: correo(a.nombre), domicilio: /NATURAL/.test(a.nombre) && /domicilio en ([A-ZÁÉÍÓÚ][^.,]+)/.exec(todo) ? /domicilio en ([A-ZÁÉÍÓÚ][^.,]+(?:D\.C\.)?)/.exec(todo)![1]!.trim() : null,
+    apoderado: null, correo: correo(a.nombre), domicilio: /NATURAL/.test(a.nombre) ? /domicilio en ([A-ZÁÉÍÓÚ][^,.]*?(?:\s+D\.C\.)?)(?=\s+y\s|[,.]|$)/.exec(todo)?.[1]?.trim() ?? null : null,
     proteccionEspecial: [], soportes: a.soportes.slice(0, 4),
   }));
   const acreedora = partes.find((x) => x.esCliente)?.nombre ?? "la parte solicitante";
@@ -244,7 +244,7 @@ function pieza(p: PeticionEstructurada<unknown>) {
   const secciones = [
     { titulo: "Partes", componentes: ["juez", "partes", "apoderado"].filter(tiene), numerarParrafos: false, parrafos: [
       { texto: `Demandante: ${cliente?.nombre ?? "[DEMANDANTE]"}${cliente?.identificacion ? `, identificada con ${cliente.identificacion}` : ""}, representada legalmente según el certificado de existencia y representación que se anexa.`, fuenteIds: [], hechoIds: [], soportes: [] },
-      { texto: `Demandada: ${contraparte?.nombre ?? "[DEMANDADA]"}${contraparte?.identificacion ? `, identificada con ${contraparte.identificacion}` : ""}, domiciliada en ${contraparte?.domicilio ?? "[DOMICILIO]"}.`, fuenteIds: [], hechoIds: [], soportes: [] },
+      { texto: `Demandada: ${contraparte?.nombre ?? "[DEMANDADA]"}${contraparte?.identificacion ? `, identificada con ${contraparte.identificacion}` : ""}, domiciliada en ${(contraparte?.domicilio ?? "[DOMICILIO]").replace(/\.$/, "")}.`, fuenteIds: [], hechoIds: [], soportes: [] },
     ] },
     { titulo: "Hechos", componentes: ["hechos"].filter(tiene), numerarParrafos: true, parrafos: hs.map((h) => ({ texto: h.descripcion, fuenteIds: [], hechoIds: [h.id], soportes: soportesDe(h) })) },
     { titulo: "Pretensiones", componentes: ["pretensiones"].filter(tiene), numerarParrafos: true, parrafos: [
@@ -377,7 +377,7 @@ export function crearLlmDemostracion(o: OpcionesDemostracion = {}): LlmSimulado 
     analisis: subsuncion,
     terminos: (p) => {
       const catalogo = lineas<{ id: string }>(bloque(p, "CATÁLOGO"));
-      const venc = hechosDe(p).find((h) => /vencimiento/.test(h.descripcion) && h.fecha);
+      const venc = hechosDe(p).find((h) => /se cumplió el vencimiento/.test(h.descripcion) && h.fecha);
       return { terminos: catalogo.some((c) => c.id === "cambiaria_directa") && venc ? [{ catalogoId: "cambiaria_directa", fechaEvento: venc.fecha, fechaEventoHasta: null, soporte: `Pagaré No. DEMO-001, fecha de vencimiento (${venc.soportes[0] ?? "expediente"})`, fechaProvisional: false, razon: "La acción cambiaria directa prescribe desde el vencimiento del título." }] : [], observaciones: [] };
     },
     nulidades: () => ({ aplica: false, razon: "No hay actuación judicial.", respuestas: [1, 2, 3, 4, 5, 6, 7, 8].map((numeral) => ({ numeral, indicio: "NO", soporte: null, observacion: null, saneada: null })) }),
@@ -394,7 +394,7 @@ export function crearLlmDemostracion(o: OpcionesDemostracion = {}): LlmSimulado 
     trampas: () => ({ via: "DEMANDA_EJECUTIVA", asuntoConciliable: true, pideMedidasCautelares: true, demandadoEntidadPublica: false, asuntoLaboralOPensional: false, querellable: false, tieneSentenciaOSeguirAdelante: false, cargaPendiente: null, otras: [{ titulo: "Custodia del original del título", detalle: "El despacho puede requerir la exhibición del original del pagaré: debe conservarse en custodia y disponible.", gravedad: "MEDIA", fundamento: null }] }),
     masc: () => ({ asunto: "Cobro de pagaré", derechosCiertosEIndiscutibles: false, estadoCivil: false, delitoNoQuerellable: false, relacionAPreservar: 0.3, cuantiaFrenteACosto: 0.3, debilidadProbatoriaPropia: 0.2, duracionEstimadaProceso: 0.6, disposicionManifestada: 0.2, obstaculoNoNegociable: false, razones: ["No hay relación comercial que preservar.", "La prueba documental es sólida.", "La deudora no respondió al requerimiento."] }),
     estrategia: (p) => {
-      const venc = hechosDe(p).find((h) => /vencimiento/.test(h.descripcion) && h.fecha)?.fecha;
+      const venc = hechosDe(p).find((h) => /se cumplió el vencimiento/.test(h.descripcion) && h.fecha)?.fecha;
       const mora = venc ? fechaLarga(new Date(Date.parse(`${venc}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10)) : "[fecha de mora]";
       return { etapa: "SIN_PROCESO", autoApelable: false, otroMedioEficaz: null, interesColectivo: false, grupoPlural: false, tituloEjecutivo: true, actoAdministrativoParticular: false, recursosAdministrativosEnTermino: false, danoAntijuridicoEstatal: false, incumplimientoNormaOActo: false, renuenciaConstituida: false, peticionSinRespuesta: false, requiereReclamacionPrevia: false, conductaPenal: false, perturbacionPosesion: false, relacionConsumo: false, reclamacionConsumoAgotada: false, servicioPublicoDomiciliario: false, destinatario: "Juez Civil Municipal de Bogotá D.C. (reparto)", objetivo: "obtener mandamiento de pago por el capital y los intereses moratorios del pagaré", pretensionPrincipal: `Que se libre mandamiento de pago a favor de la demandante y en contra de la demandada por el capital del pagaré No. DEMO-001, más los intereses moratorios liquidados desde el ${mora} hasta el pago total` };
     },
