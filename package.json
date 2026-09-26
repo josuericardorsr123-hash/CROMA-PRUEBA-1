@@ -13,7 +13,7 @@
     "apps/*"
   ],
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "grafo:validar": "tsx apps/cli/src/main.ts grafo validar",
@@ -22,10 +22,11 @@
     "dev:api": "tsx watch apps/api/src/main.ts",
     "dev:web": "npm run dev -w @em/web",
     "build": "npm run build:api && npm run build:cli && npm run build -w @em/web",
-    "build:api": "esbuild apps/api/src/main.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/api.mjs --packages=external",
-    "build:cli": "esbuild apps/cli/src/main.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/em.mjs --packages=external",
+    "build:api": "node scripts/construir.mjs api",
+    "build:cli": "node scripts/construir.mjs cli",
     "start": "node --disable-warning=ExperimentalWarning dist/api.mjs",
-    "verificar": "npm run typecheck && npm run test && npm run grafo:validar"
+    "verificar": "npm run typecheck && npm run test && npm run grafo:validar",
+    "demo:api": "EM_MODO=demostracion tsx apps/api/src/main.ts"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

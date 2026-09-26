@@ -21,6 +21,7 @@ export * from "./servicios";
 export { SISTEMA } from "./ia";
 export { etiquetar, verificarAfirmaciones, disociar } from "./nodos/gobernanza";
 export { segmentar } from "./nodos/organizacion";
+export { completarCampos } from "./nodos/estrategia";
 export { PATRONES } from "./nodos/ingreso";
 
 /** Registro completo: un manejador por cada nodo del grafo validado (el ejecutor rechaza un grafo con nodos sin manejador). */

@@ -9,6 +9,13 @@ function perfilDesdeArchivo(ruta: string | undefined): PerfilDespacho {
   return validarPerfilDespacho(JSON.parse(readFileSync(ruta, "utf8")));
 }
 
+/** Lista de fechas AAAA-MM-DD separadas por comas; rechaza cualquier valor mal formado. */
+function fechasDesdeEntorno(nombre: string, valor: string | undefined): string[] {
+  const lista = (valor ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+  for (const f of lista) if (!/^\d{4}-\d{2}-\d{2}$/.test(f) || Number.isNaN(Date.parse(`${f}T00:00:00Z`))) throw new Error(`${nombre}: fecha inválida «${f}» (use AAAA-MM-DD).`);
+  return lista;
+}
+
 /** Configuración del despacho desde el entorno (todo es configurable; nada queda cableado al caso). */
 export function configDesdeEntorno(entorno: NodeJS.ProcessEnv = process.env, extra: Partial<ConfigPipeline> = {}): ConfigPipeline {
   return {
@@ -17,7 +24,7 @@ export function configDesdeEntorno(entorno: NodeJS.ProcessEnv = process.env, ext
     publicacion: entorno.EM_PUBLICACION ?? "Expediente Maleable · Informe técnico",
     ciudad: entorno.EM_CIUDAD ?? "Bogotá D.C.",
     perfilDespacho: perfilDesdeArchivo(entorno.EM_PERFIL_DESPACHO),
-    calendario: CALENDARIO_POR_DEFECTO,
+    calendario: { ...CALENDARIO_POR_DEFECTO, cierres: fechasDesdeEntorno("EM_CIERRES_JUDICIALES", entorno.EM_CIERRES_JUDICIALES), habilitados: fechasDesdeEntorno("EM_DIAS_HABILITADOS", entorno.EM_DIAS_HABILITADOS) },
     umbrales: UMBRALES_POR_DEFECTO,
     smmlvAjustes: ajustesSmmlvDesdeEntorno(entorno.SMMLV_AJUSTES ?? ""),
     maxIteraciones: { g_citas: Number(entorno.EM_MAX_ITER_CITAS ?? 2), revision: Number(entorno.EM_MAX_ITER_REVISION ?? 6) },

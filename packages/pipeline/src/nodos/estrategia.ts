@@ -111,12 +111,14 @@ export function documentoPieza(ctx: ContextoNodo, g: PiezaGuardada, modo: Docume
   }));
   const anexos = ctx.exp.piezas.filter((x) => x.estado === "ORGANIZADO" && x.anexo !== null).sort((a, b) => a.anexo! - b.anexo!);
   if (anexos.length) cuerpo.push({ titulo: "Anexos", numerado: "ROMANO", bloques: [{ tipo: "lista", ordenada: false, items: anexos.map((x) => [{ texto: `Anexo ${x.anexo}. ${x.nombreArchivo} (${x.paginas} ${x.paginas === 1 ? "página" : "páginas"}).` }]) }] });
-  const contrapartes = ctx.exp.partes.filter((x) => !x.esCliente);
+  // Quien representa o apodera al cliente no se notifica como contraparte.
+  const delCliente = new Set(ctx.exp.partes.filter((x) => x.esCliente).flatMap((x) => [x.representante, x.apoderado]).filter((x): x is string => Boolean(x)).map((x) => x.toUpperCase()));
+  const contrapartes = ctx.exp.partes.filter((x) => !x.esCliente && !delCliente.has(x.nombre.toUpperCase()));
   const firma = firmaPieza(p);
   cuerpo.push({
     titulo: "Notificaciones", numerado: "ROMANO",
     bloques: [
-      ...contrapartes.map((x) => ({ tipo: "parrafo" as const, segmentos: [{ texto: `${x.nombre} (${x.calidad}): dirección física ${x.domicilio ?? "[DIRECCIÓN]"}; canal digital ${x.correo ?? "[CORREO ELECTRÓNICO] (manifiesto bajo juramento que es el utilizado por la persona y cómo se obtuvo, art. 8 de la Ley 2213 de 2022)"}.` }] })),
+      ...contrapartes.map((x) => ({ tipo: "parrafo" as const, segmentos: [{ texto: `${x.nombre} (${x.calidad}): dirección física ${x.domicilio && /\d/.test(x.domicilio) ? x.domicilio : `[DIRECCIÓN]${x.domicilio ? `, ${x.domicilio}` : ""}`}; canal digital ${x.correo ?? "[CORREO ELECTRÓNICO] (manifiesto bajo juramento que es el utilizado por la persona y cómo se obtuvo, art. 8 de la Ley 2213 de 2022)"}.` }] })),
       { tipo: "parrafo" as const, segmentos: [{ texto: `El suscrito apoderado recibirá notificaciones en ${firma.contacto}.` }] },
     ],
   });
