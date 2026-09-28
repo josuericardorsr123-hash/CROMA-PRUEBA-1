@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AUTOR_POR_DEFECTO, completarCampos, configDesdeEntorno, PERFIL_DEMO } from "../src";
+import { AUTOR_POR_DEFECTO, completarCampos, configDesdeEntorno, PERFIL_DEMO, serviciosCompartidos } from "../src";
 
 describe("configuración del despacho", () => {
   it("toma valores por defecto y los del entorno", () => {
@@ -20,5 +20,18 @@ describe("campos abiertos del apoderado", () => {
     const t = "[NOMBRE], C.C. [C.C. No.], T.P. [T.P. No.], teléfono [TELÉFONO]";
     expect(completarCampos(t, PERFIL_DEMO)).toBe(`${PERFIL_DEMO.nombre}, C.C. ${PERFIL_DEMO.identificacion}, T.P. ${PERFIL_DEMO.tarjetaProfesional}, teléfono [TELÉFONO]`);
     expect(completarCampos(t, null)).toBe(t);
+  });
+});
+
+describe("proveedor de IA", () => {
+  it("elige Claude Code con EM_PROVEEDOR_IA y la API con ANTHROPIC_API_KEY", async () => {
+    const cc = serviciosCompartidos({ entorno: { EM_PROVEEDOR_IA: "claude-code" } });
+    expect(cc.llm?.nombre).toBe("claude-code");
+    expect(cc.advertencias.join(" ")).toMatch(/uso personal/);
+    const api = serviciosCompartidos({ entorno: { ANTHROPIC_API_KEY: "sk-ant-prueba" } });
+    expect(api.llm?.nombre).toBe("anthropic");
+    expect(serviciosCompartidos({ entorno: {} }).llm).toBeNull();
+    expect(() => serviciosCompartidos({ entorno: { EM_PROVEEDOR_IA: "otro" } })).toThrow(/EM_PROVEEDOR_IA/);
+    await Promise.all([cc.croma.cerrar(), api.croma.cerrar()]);
   });
 });

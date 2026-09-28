@@ -4,7 +4,7 @@ import { type ClienteCroma, crearClienteCromaDesdeEntorno, type Registro, REGIST
 import { type AccionAbogado, type Entrante, type Expediente, type Instruccion, nuevoId } from "@em/dominio";
 import { detectarMime } from "@em/documentos";
 import { cargarJsonl, RepositorioFuentes, ResolutorFuentes } from "@em/fuentes";
-import { LlmAnthropic, type LlmPort } from "@em/ia";
+import { LlmAnthropic, LlmClaudeCode, type LlmPort } from "@em/ia";
 import type { ConfigPipeline, PuertoAbogados, PuertoMemoria, PuertoTerminos, Servicios } from "./contexto";
 import { configDesdeEntorno } from "./config";
 
@@ -37,10 +37,18 @@ export function serviciosCompartidos(o: OpcionesCompartidos = {}): Compartidos {
   const entorno = o.entorno ?? process.env;
   const registro = o.registro ?? REGISTRO_SILENCIOSO;
   const advertencias: string[] = [];
-  const llm = o.llm !== undefined ? o.llm : entorno.ANTHROPIC_API_KEY
+  const proveedor = (entorno.EM_PROVEEDOR_IA || "anthropic").toLowerCase();
+  if (!["anthropic", "claude-code"].includes(proveedor)) throw new Error(`EM_PROVEEDOR_IA desconocido: «${proveedor}» (use anthropic o claude-code).`);
+  let llm: LlmPort | null;
+  if (o.llm !== undefined) llm = o.llm;
+  else if (proveedor === "claude-code") {
+    // Sesión de Claude Code del propio usuario: solo para uso personal y local.
+    llm = new LlmClaudeCode({ comando: entorno.EM_CLAUDE_COMANDO || undefined, modelo: entorno.EM_MODELO || undefined, timeoutMs: entorno.EM_CLAUDE_TIMEOUT_MS ? Number(entorno.EM_CLAUDE_TIMEOUT_MS) : undefined, entorno });
+    advertencias.push("Proveedor de IA: Claude Code con la sesión del usuario (uso personal y local; no ofrecer a terceros).");
+  } else llm = entorno.ANTHROPIC_API_KEY
     ? new LlmAnthropic({ apiKey: entorno.ANTHROPIC_API_KEY, modelo: entorno.EM_MODELO || undefined, fallbacks: entorno.EM_FALLBACKS !== "0", registro })
     : null;
-  if (!llm) advertencias.push("ANTHROPIC_API_KEY no configurada: los nodos que requieren IA se detendrán con error explicativo.");
+  if (!llm) advertencias.push("ANTHROPIC_API_KEY no configurada: los nodos que requieren IA se detendrán con error explicativo (o use EM_PROVEEDOR_IA=claude-code para uso personal).");
   const croma = o.croma ?? crearClienteCromaDesdeEntorno({ registro }, entorno);
   if (!croma.configurado) advertencias.push("CROMA_API_KEY no configurada: las fuentes oficiales quedarán NO VERIFICADAS.");
   let repositorio = o.repositorio;

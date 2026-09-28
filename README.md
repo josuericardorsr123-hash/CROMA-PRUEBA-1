@@ -16,7 +16,7 @@ Plataforma para procesar expedientes de **cualquier proceso del ordenamiento jur
 npm ci
 npm run demo                       # expediente ficticio de punta a punta → ./salida-demo/*.docx
 npm run demo:api                   # API + consola web con Croma simulado (usuario: abogado@ejemplo.test, tenant: demo)
-npm run verificar                  # tipos + 144 pruebas + validación del grafo
+npm run verificar                  # tipos + 151 pruebas + validación del grafo
 ```
 
 Requisitos: Node 22.12 o superior. LibreOffice Writer, poppler-utils y qpdf se usan para leer PDF, rasterizar escaneos y paginar el índice. Sin ellos, el sistema degrada y lo declara. Con Docker:
@@ -28,6 +28,25 @@ docker compose exec em em usuarios crear --correo abogada@despacho.co --nombre "
 ```
 
 La consola queda en `http://localhost:8080`.
+
+## Uso personal con su cuenta de Claude (Claude Code)
+
+Para procesar sus propios expedientes en su máquina sin clave de API, el sistema puede usar la sesión de **Claude Code** con la que usted ya inició sesión. Llama a `claude -p` en [modo no interactivo](https://code.claude.com/docs/en/headless) con salida estructurada validada.
+
+```bash
+claude                                        # una vez: inicie sesión con su cuenta
+export EM_PROVEEDOR_IA=claude-code
+export CROMA_API_KEY=...                      # opcional: sin ella, las fuentes quedan NO VERIFICADAS
+npm run em -- usuarios crear --correo usted@correo.co --nombre "Su nombre" --rol ABOGADO --clave '…'
+npm run em -- procesar ./mi-expediente --usuario usted@correo.co --titulo "…"
+npm run em -- instruir exp_… APROBAR --usuario usted@correo.co --reanudar
+```
+
+Condiciones de este modo:
+
+- **Solo uso personal y local.** Anthropic no permite ofrecer el inicio de sesión de claude.ai a terceros, por eso el servidor en producción rechaza este modo. Para un despliegue que atienda a otras personas use `ANTHROPIC_API_KEY`.
+- **Consume los límites de uso de su plan.** Un expediente hace decenas de llamadas; si se alcanza el límite, el nodo se detiene con un error explicativo y se reanuda después con `em reanudar`.
+- **Es más lento que la API** y no usa cache de prompts.
 
 ## Cómo trabaja el ABOGADO (USUARIO)
 

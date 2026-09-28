@@ -18,6 +18,8 @@ const registro: Registro = {
   error: (m, d) => console.error(JSON.stringify({ nivel: "error", m, ...d })),
 };
 
+if ((process.env.EM_PROVEEDOR_IA ?? "").toLowerCase() === "claude-code" && process.env.NODE_ENV === "production")
+  throw new Error("EM_PROVEEDOR_IA=claude-code es solo para uso personal y local: el servidor en producción atiende a terceros y debe usar ANTHROPIC_API_KEY.");
 const almacen = await abrirAlmacen();
 const demostracion = process.env.EM_MODO === "demostracion";
 if (demostracion && process.env.NODE_ENV === "production" && process.env.EM_PERMITIR_DEMO !== "1") throw new Error("EM_MODO=demostracion no se admite con NODE_ENV=production (use EM_PERMITIR_DEMO=1 para una instancia de muestra aislada).");
