@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+dist
+apps/web/dist
+.em-data
+salida*
+tmp
+.git
+.env
+.env.*
+expedientes

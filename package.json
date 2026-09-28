@@ -1,0 +1,39 @@
+{
+  "name": "expediente-maleable",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma enterprise de procesamiento de expedientes para el ordenamiento jurídico colombiano, conectada a fuentes oficiales vía Croma (MCP). El ABOGADO (USUARIO) dirige el sistema y audita cada salida.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "grafo:validar": "tsx apps/cli/src/main.ts grafo validar",
+    "demo": "tsx apps/cli/src/main.ts demo",
+    "em": "tsx apps/cli/src/main.ts",
+    "dev:api": "tsx watch apps/api/src/main.ts",
+    "dev:web": "npm run dev -w @em/web",
+    "build": "npm run build:api && npm run build:cli && npm run build -w @em/web",
+    "build:api": "node scripts/construir.mjs api",
+    "build:cli": "node scripts/construir.mjs cli",
+    "start": "node --disable-warning=ExperimentalWarning dist/api.mjs",
+    "verificar": "npm run typecheck && npm run test && npm run grafo:validar",
+    "demo:api": "EM_MODO=demostracion tsx apps/api/src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "@types/pg": "^8.23.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.2"
+  }
+}

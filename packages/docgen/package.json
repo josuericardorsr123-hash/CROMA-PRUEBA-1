@@ -1,0 +1,19 @@
+{
+  "name": "@em/docgen",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Generadores DOCX: informe técnico y piezas procesales",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@em/documentos": "*",
+    "@em/dominio": "*",
+    "@em/motores": "*",
+    "docx": "^9.7.2",
+    "fflate": "^0.8.3"
+  }
+}

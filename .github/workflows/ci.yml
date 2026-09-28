@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: em_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      EM_TEST_POSTGRES_URL: postgres://postgres:postgres@127.0.0.1:5432/em_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Herramientas documentales
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-writer-nogui poppler-utils qpdf fonts-liberation
+      - run: npm ci --no-audit --no-fund
+      - name: Tipos
+        run: npm run typecheck
+      - name: Pruebas (SQLite y PostgreSQL)
+        run: npm test
+      - name: Grafo
+        run: npm run grafo:validar
+      - name: Construcción
+        run: npm run build
+      - name: Demostración de extremo a extremo
+        run: node --disable-warning=ExperimentalWarning dist/em.mjs demo --salida salida-demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: entregables-demostracion
+          path: salida-demo/
+          retention-days: 14
+
+  imagen:
+    runs-on: ubuntu-24.04
+    needs: verificar
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagen
+        run: docker build -t expediente-maleable:ci .

@@ -1,0 +1,16 @@
+{
+  "name": "@em/almacen",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Persistencia: SQLite/Postgres, blobs cifrados, bitácora encadenada, cola de trabajos",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@em/dominio": "*",
+    "pg": "^8.23.0"
+  }
+}
