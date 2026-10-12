@@ -1,0 +1,81 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Ciclo de vida de una solicitud</B><BR/><FONT POINT-SIZE="9">Flujo de algoritmo · v1.0 · 2026-10-12 · D01</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Control de acceso</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E7F1EB"; color="#7CB48F"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Llamada MCP</B><BR/>o POST …/v1<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R10</I></FONT>>];
+    "V" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Admitida? (esquema, llave, créditos, topes)</B>>];
+    "CH" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿En caché?</B>>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Resolución</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#EBE9F3"; color="#8F85BE"; penwidth=1.0;
+    "M" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Modo?</B>>];
+    "DSQ" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>Copia completa</B><BR/>ms · 1 crédito<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "LKQ" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Lectura vigente?</B>>];
+    "ASY" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Asíncrono?</B>>];
+    "W" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Termina en wait? (MCP siempre espera)</B>>];
+    "P" [shape=box, peripheries=2, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>202 + status_url</B><BR/>polling o callback<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R05 · R16</I></FONT>>];
+    "JS" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Estado del job?</B>>];
+    "SRC" [shape=diamond, peripheries=1, style="filled", fillcolor="#8C6D31", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>¿Fuente disponible?</B>>];
+  }
+  subgraph cluster_2 {
+    label=<<B>Respuesta</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "RES" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Hay coincidencia?</B>>];
+    "OK" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>200 { data }</B>>];
+    "NF" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>200 found:false</B><BR/>o lista vacía>];
+    "HIT" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>200 · X-Cache: HIT</B><BR/>0 créditos<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R06</I></FONT>>];
+    "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: respuesta útil</B>>];
+  }
+  "E4" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>400 invalid_param · 401</B><BR/>402 plan_limit · 429>];
+  "E5" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>5xx upstream_error ·</B><BR/>job_failed · expired>];
+  "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: error tipado</B>>];
+  { rank=same; "S"; }
+  { rank=same; "V"; }
+  { rank=same; "CH"; "E4"; }
+  { rank=same; "M"; "HIT"; }
+  { rank=same; "DSQ"; "LKQ"; }
+  { rank=same; "ASY"; }
+  { rank=same; "W"; }
+  { rank=same; "P"; "SRC"; }
+  { rank=same; "JS"; }
+  { rank=same; "RES"; "E5"; }
+  { rank=same; "OK"; "NF"; "FER"; }
+  { rank=same; "FOK"; }
+  "S" -> "V" [color="#404040", style="solid", penwidth=1.1];
+  "V" -> "CH" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "V" -> "E4" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "CH" -> "HIT" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "CH" -> "M" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "M" -> "DSQ" [color="#404040", style="solid", penwidth=1.1, label=< dataset >, fontcolor="#262626"];
+  "M" -> "LKQ" [color="#404040", style="solid", penwidth=1.1, label=< lookup >, fontcolor="#262626"];
+  "M" -> "ASY" [color="#404040", style="solid", penwidth=1.1, label=< vivo >, fontcolor="#262626"];
+  "LKQ" -> "RES" [color="#404040", style="solid", penwidth=1.1, label=< sí: copy >, fontcolor="#262626"];
+  "LKQ" -> "ASY" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "ASY" -> "SRC" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "ASY" -> "W" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "W" -> "SRC" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "W" -> "P" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "P" -> "JS" [color="#404040", style="solid", penwidth=1.1];
+  "JS" -> "P" [color="#404040", style="solid", penwidth=1.1, label=< running >, fontcolor="#262626", constraint=false];
+  "JS" -> "RES" [color="#404040", style="solid", penwidth=1.1, label=< completed >, fontcolor="#262626"];
+  "JS" -> "E5" [color="#D55E00", style="solid", penwidth=1.4, label=< failed >, fontcolor="#D55E00"];
+  "SRC" -> "RES" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "SRC" -> "E5" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "DSQ" -> "RES" [color="#404040", style="solid", penwidth=1.1];
+  "RES" -> "OK" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "RES" -> "NF" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "OK" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "NF" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "HIT" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "E4" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "E5" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#56B4E9"></TD><TD ALIGN="LEFT">Datos / almacén</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#332288"></TD><TD ALIGN="LEFT">Control / orquestación</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#8C6D31"></TD><TD ALIGN="LEFT">Fuente oficial externa</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

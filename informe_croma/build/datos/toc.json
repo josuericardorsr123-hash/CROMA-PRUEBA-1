@@ -1,0 +1,342 @@
+[
+ {
+  "nivel": 1,
+  "texto": "INTRODUCCIÓN",
+  "clave": "h0"
+ },
+ {
+  "nivel": 1,
+  "texto": "I. METODOLOGÍA Y ALCANCE",
+  "clave": "h1"
+ },
+ {
+  "nivel": 2,
+  "texto": "1.1 — Preguntas que guían el informe",
+  "clave": "h2"
+ },
+ {
+  "nivel": 2,
+  "texto": "1.2 — Fuentes primarias consultadas",
+  "clave": "h3"
+ },
+ {
+  "nivel": 2,
+  "texto": "1.3 — Batería de pruebas en vivo",
+  "clave": "h4"
+ },
+ {
+  "nivel": 2,
+  "texto": "1.4 — Salvaguardas éticas y de protección de datos",
+  "clave": "h5"
+ },
+ {
+  "nivel": 2,
+  "texto": "1.5 — Ejecución del Creador de Flujos de Trabajo",
+  "clave": "h6"
+ },
+ {
+  "nivel": 1,
+  "texto": "II. ARQUITECTURA DE CROMA",
+  "clave": "h7"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.1 — Qué es Croma y quién lo opera",
+  "clave": "h8"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.2 — Superficies y puntos de entrada",
+  "clave": "h9"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.3 — Tres modos de respuesta: vivo, dataset y lookup",
+  "clave": "h10"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.4 — Contrato de respuesta y manejo de errores",
+  "clave": "h11"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.5 — Asincronía, lotes y caché",
+  "clave": "h12"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.6 — Créditos, planes y límites",
+  "clave": "h13"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.7 — Versionado y deprecación",
+  "clave": "h14"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.8 — Monitores y conexiones",
+  "clave": "h15"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.9 — Diagrama de arquitectura (D00)",
+  "clave": "h16"
+ },
+ {
+  "nivel": 2,
+  "texto": "2.10 — Diagrama del ciclo de vida de una solicitud (D01)",
+  "clave": "h17"
+ },
+ {
+  "nivel": 1,
+  "texto": "III. MAPA DE LAS FUENTES COLOMBIANAS",
+  "clave": "h18"
+ },
+ {
+  "nivel": 2,
+  "texto": "3.1 — Inventario por dominio",
+  "clave": "h19"
+ },
+ {
+  "nivel": 2,
+  "texto": "3.2 — Frescura de los datos observada",
+  "clave": "h20"
+ },
+ {
+  "nivel": 2,
+  "texto": "3.3 — Identificadores que abren cada fuente",
+  "clave": "h21"
+ },
+ {
+  "nivel": 1,
+  "texto": "IV. FLUJOS DE TRABAJO POR FUENTE DEL ESTADO COLOMBIANO",
+  "clave": "h22"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.1 — Rama Judicial: procesos, lotes y correos de despachos",
+  "clave": "h23"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.2 — Jurisprudencia de las altas cortes y disciplina judicial",
+  "clave": "h24"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.3 — Empresas: RUES, Supersociedades, SIMEV y comercio exterior",
+  "clave": "h25"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.4 — Supersociedades: insolvencia, Baranda Virtual y Relatoría",
+  "clave": "h26"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.5 — Contratación pública: SECOP I y II y conceptos de la ANCP-CCE",
+  "clave": "h27"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.6 — Verificación de personas naturales",
+  "clave": "h28"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.7 — Vehículos y tránsito: RUNT y SIMIT",
+  "clave": "h29"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.8 — Fuentes con sesión del titular y factura electrónica",
+  "clave": "h30"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.9 — Normativa y regulación",
+  "clave": "h31"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.10 — Superintendencia de Industria y Comercio",
+  "clave": "h32"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.11 — Catastro nacional del IGAC",
+  "clave": "h33"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.12 — Estadística oficial: DANE, Banco de la República, DNP, ICFES y MinEducación",
+  "clave": "h34"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.13 — Fuentes sectoriales: INVIMA, ANM y SIATA",
+  "clave": "h35"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.14 — Trámites del Estado y herramientas web",
+  "clave": "h36"
+ },
+ {
+  "nivel": 2,
+  "texto": "4.15 — Monitores: alertas programadas por correo",
+  "clave": "h37"
+ },
+ {
+  "nivel": 1,
+  "texto": "V. ATAJOS PARA APROVECHAR EL 100 % DE LA API",
+  "clave": "h38"
+ },
+ {
+  "nivel": 2,
+  "texto": "5.1 — Atajos de identificador",
+  "clave": "h39"
+ },
+ {
+  "nivel": 2,
+  "texto": "5.2 — Atajos de costo",
+  "clave": "h40"
+ },
+ {
+  "nivel": 2,
+  "texto": "5.3 — Atajos de contexto para agentes",
+  "clave": "h41"
+ },
+ {
+  "nivel": 2,
+  "texto": "5.4 — Cadenas de herramientas recomendadas",
+  "clave": "h42"
+ },
+ {
+  "nivel": 1,
+  "texto": "VI. CÓMO SOLICITAR INSTRUCCIONES A UN AGENTE CON CROMA",
+  "clave": "h43"
+ },
+ {
+  "nivel": 2,
+  "texto": "6.1 — Principios",
+  "clave": "h44"
+ },
+ {
+  "nivel": 2,
+  "texto": "6.2 — Plantilla de instrucción",
+  "clave": "h45"
+ },
+ {
+  "nivel": 2,
+  "texto": "6.3 — De instrucciones débiles a instrucciones efectivas",
+  "clave": "h46"
+ },
+ {
+  "nivel": 2,
+  "texto": "6.4 — Instrucciones para monitores",
+  "clave": "h47"
+ },
+ {
+  "nivel": 2,
+  "texto": "6.5 — Indicaciones para integradores por REST",
+  "clave": "h48"
+ },
+ {
+  "nivel": 1,
+  "texto": "VII. LIMITACIONES Y RIESGOS",
+  "clave": "h49"
+ },
+ {
+  "nivel": 2,
+  "texto": "7.1 — Limitaciones de diseño documentadas",
+  "clave": "h50"
+ },
+ {
+  "nivel": 2,
+  "texto": "7.2 — Limitaciones observadas en las pruebas",
+  "clave": "h51"
+ },
+ {
+  "nivel": 2,
+  "texto": "7.3 — Calidad de los datos",
+  "clave": "h52"
+ },
+ {
+  "nivel": 2,
+  "texto": "7.4 — Riesgos jurídicos y de cumplimiento",
+  "clave": "h53"
+ },
+ {
+  "nivel": 1,
+  "texto": "VIII. PRODUCTOS QUE SE PUEDEN CONSTRUIR",
+  "clave": "h54"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.1 — Portafolio de productos",
+  "clave": "h55"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.2 — Prototipo 1: KYB express para originación de crédito",
+  "clave": "h56"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.3 — Prototipo 2: Vigilancia judicial de cartera",
+  "clave": "h57"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.4 — Prototipo 3: Inteligencia de contratación pública",
+  "clave": "h58"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.5 — Prototipo 4: Asistente jurisprudencial y regulatorio",
+  "clave": "h59"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.6 — Economía de créditos por plan",
+  "clave": "h60"
+ },
+ {
+  "nivel": 2,
+  "texto": "8.7 — Arquitectura de referencia para construir sobre Croma",
+  "clave": "h61"
+ },
+ {
+  "nivel": 1,
+  "texto": "IX. CONCLUSIONES",
+  "clave": "h62"
+ },
+ {
+  "nivel": 1,
+  "texto": "Referencias",
+  "clave": "h63"
+ },
+ {
+  "nivel": 1,
+  "texto": "ANEXO A. ESPECIFICACIONES DE FORMA DEL DOCUMENTO",
+  "clave": "h64"
+ },
+ {
+  "nivel": 1,
+  "texto": "ANEXO B. REPORTE DE VALIDACIÓN DE LOS DIAGRAMAS",
+  "clave": "h65"
+ },
+ {
+  "nivel": 1,
+  "texto": "ANEXO C. REGISTRO DE PRUEBAS EN VIVO",
+  "clave": "h66"
+ },
+ {
+  "nivel": 1,
+  "texto": "ANEXO D. CATÁLOGO DE LOS 172 ENDPOINTS DE COLOMBIA",
+  "clave": "h67"
+ }
+]

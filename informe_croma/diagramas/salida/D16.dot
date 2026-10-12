@@ -1,0 +1,65 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Monitores: alertas programadas por correo</B><BR/><FONT POINT-SIZE="9">Máquina de estados / flujo · v1.0 · 2026-10-12 · D16</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Configuración</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#EBE9F3"; color="#8F85BE"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>«Avísame</B><BR/>cuando…»>];
+    "EN" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Monitores habilitados?</B>>];
+    "Q" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#CC79A7", color="#1A1A1A", fontcolor="#000000", label=<<B>El agente ejecuta</B><BR/>la búsqueda<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R09</I></FONT>>];
+    "R" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Hay destinatarios?</B>>];
+    "ASK" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Preguntar correos</B><BR/>(máx. 3, no adivinar)<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R13</I></FONT>>];
+    "CR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>create_monitor</B><BR/>endpoint + query<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R15</I></FONT>>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Ejecución</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F5F1"; color="#73CAB2"; penwidth=1.0;
+    "CA" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Dataset o vivo?</B>>];
+    "FR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>Primera ejecución</B><BR/>≤500 filas + bienvenida<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R02 · R04</I></FONT>>];
+    "RU" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>Ejecuciones: nuevos</B><BR/>o changes<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R02</I></FONT>>];
+    "RL" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Filtro de relevancia?</B>>];
+    "LLM" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#CC79A7", color="#1A1A1A", fontcolor="#000000", label=<<B>Evaluar filas</B><BR/>relevant:false<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R14</I></FONT>>];
+    "M" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Correo</B><BR/>always · on_new<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R13</I></FONT>>];
+  }
+  "E1" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>monitors_not_</B><BR/>enabled (T46)>];
+  "E2" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>schedule_faster_than_</B><BR/>source · tope 20>];
+  "E3" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>skipped_plan_limit</B><BR/>· truncated>];
+  "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: alerta</B><BR/>entregada>];
+  "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: pedir acceso</B><BR/>o corregir>];
+  { rank=same; "S"; "EN"; }
+  { rank=same; "Q"; "R"; }
+  { rank=same; "ASK"; "E1"; }
+  { rank=same; "CR"; }
+  { rank=same; "CA"; "FR"; }
+  { rank=same; "RU"; "RL"; "E2"; }
+  { rank=same; "E3"; "FER"; }
+  { rank=same; "LLM"; "M"; }
+  { rank=same; "FOK"; }
+  "S" -> "EN" [color="#404040", style="solid", penwidth=1.1];
+  "EN" -> "Q" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "EN" -> "E1" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "Q" -> "R" [color="#404040", style="solid", penwidth=1.1];
+  "R" -> "CR" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "R" -> "ASK" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "ASK" -> "CR" [color="#404040", style="solid", penwidth=1.1];
+  "CR" -> "CA" [color="#404040", style="solid", penwidth=1.1, label=< creado >, fontcolor="#262626"];
+  "CR" -> "E2" [color="#D55E00", style="solid", penwidth=1.4, label=< rechazado >, fontcolor="#D55E00"];
+  "CA" -> "FR" [color="#404040", style="solid", penwidth=1.1, label=< dataset: source, 1 crédito >, fontcolor="#262626"];
+  "CA" -> "FR" [color="#404040", style="solid", penwidth=1.1, label=< vivo: daily/weekly >, fontcolor="#262626"];
+  "FR" -> "RU" [color="#404040", style="solid", penwidth=1.1];
+  "RU" -> "RL" [color="#404040", style="solid", penwidth=1.1];
+  "RU" -> "E3" [color="#D55E00", style="solid", penwidth=1.4, label=< sin créditos >, fontcolor="#D55E00"];
+  "RL" -> "LLM" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "RL" -> "M" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "LLM" -> "M" [color="#404040", style="solid", penwidth=1.1];
+  "E3" -> "M" [color="#404040", style="solid", penwidth=1.1, label=< aviso >, fontcolor="#262626"];
+  "M" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "E1" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "E2" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#CC79A7"></TD><TD ALIGN="LEFT">Modelo de IA / agente</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#332288"></TD><TD ALIGN="LEFT">Control / orquestación</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

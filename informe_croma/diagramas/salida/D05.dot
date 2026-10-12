@@ -1,0 +1,57 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Supersociedades: insolvencia, Baranda y Relatoría</B><BR/><FONT POINT-SIZE="9">Flujo de algoritmo · v1.0 · 2026-10-12 · D05</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Consulta</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F5F1"; color="#73CAB2"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Insolvencia o litigio</B><BR/>societario>];
+    "D1" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Qué necesitas?</B>>];
+    "INS" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>insolvency_</B><BR/>processes_search<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "BAR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>baranda_*_search</B><BR/>estados · autos<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03 · R08</I></FONT>>];
+    "CF" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>baranda_</B><BR/>company_file (vivo)<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R04 · R05</I></FONT>>];
+    "REL" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>relatoria_</B><BR/>documents_search<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "D2" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Disponible?</B>>];
+    "E" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>temporarily</B><BR/>unavailable (T17)>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Resultado</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "RP" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Tipo, etapa,</B><BR/>admisión, cierre>];
+    "DD" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>baranda_decision</B><BR/>texto del auto<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R08</I></FONT>>];
+    "PV" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Providencias y</B><BR/>entradas (10/pág.)>];
+    "DOC" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>relatoria_document</B><BR/>problemas jurídicos<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R19</I></FONT>>];
+    "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: seguimiento</B><BR/>documentado>];
+    "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: usar Baranda</B><BR/>o reintentar>];
+  }
+  { rank=same; "S"; }
+  { rank=same; "D1"; }
+  { rank=same; "INS"; "BAR"; "CF"; }
+  { rank=same; "REL"; "D2"; }
+  { rank=same; "E"; }
+  { rank=same; "RP"; "DD"; "PV"; }
+  { rank=same; "DOC"; "FER"; }
+  { rank=same; "FOK"; }
+  "S" -> "D1" [color="#404040", style="solid", penwidth=1.1];
+  "D1" -> "INS" [color="#404040", style="solid", penwidth=1.1, label=< reportado >, fontcolor="#262626"];
+  "D1" -> "BAR" [color="#404040", style="solid", penwidth=1.1, label=< estados y autos >, fontcolor="#262626"];
+  "D1" -> "CF" [color="#404040", style="solid", penwidth=1.1, label=< expediente >, fontcolor="#262626"];
+  "D1" -> "REL" [color="#404040", style="solid", penwidth=1.1, label=< doctrina >, fontcolor="#262626"];
+  "INS" -> "D2" [color="#404040", style="solid", penwidth=1.1];
+  "D2" -> "RP" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D2" -> "E" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "RP" -> "BAR" [color="#332288", style="bold", penwidth=1.8, label=< remite a >, fontcolor="#332288", constraint=false];
+  "BAR" -> "DD" [color="#404040", style="solid", penwidth=1.1];
+  "CF" -> "PV" [color="#404040", style="solid", penwidth=1.1];
+  "REL" -> "DOC" [color="#404040", style="solid", penwidth=1.1];
+  "DD" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "PV" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "DOC" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "RP" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "E" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#332288"><B>——→</B></FONT></TD><TD ALIGN="LEFT">remite a</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

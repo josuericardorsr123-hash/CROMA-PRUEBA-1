@@ -1,0 +1,55 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Superintendencia de Industria y Comercio</B><BR/><FONT POINT-SIZE="9">Flujo de algoritmo · v1.0 · 2026-10-12 · D11</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Consulta</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F5F1"; color="#73CAB2"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Asunto ante la SIC</B>>];
+    "D1" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Qué buscas?</B>>];
+    "PI" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_ip_*_search →</B><BR/>marca · patente · diseño<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03 · R07</I></FONT>>];
+    "PO" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_ip_trademarks_</B><BR/>by_owner (vivo)<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R04 · R10</I></FONT>>];
+    "GZ" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_gazette_entries_</B><BR/>search<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03 · R08</I></FONT>>];
+    "SA" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_sanctions_</B><BR/>sanctions_search<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "AC" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_actos_acts_search</B><BR/>→ sic_actos_act<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03 · R08</I></FONT>>];
+    "TR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>sic_tramites_case</B><BR/>año · número · parte<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R04 · R10 · R05</I></FONT>>];
+    "D2" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Resultados?</B>>];
+    "D3" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Documento de una parte?</B>>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Resultado</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "DOCS" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Actuaciones, actos</B><BR/>y documentos<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R08</I></FONT>>];
+    "OUT" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Vigilancia marcaria o</B><BR/>debida diligencia>];
+  }
+  "NF" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>found:false: inexistente</B><BR/>o no-parte>];
+  "E" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>0 resultados: simplificar</B><BR/>la consulta (T43)>];
+  "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: decisión de PI</B><BR/>o cumplimiento>];
+  "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: verificar</B><BR/>o simplificar>];
+  "S" -> "D1" [color="#404040", style="solid", penwidth=1.1];
+  "D1" -> "PI" [color="#404040", style="solid", penwidth=1.1, label=< signo >, fontcolor="#262626"];
+  "D1" -> "PO" [color="#404040", style="solid", penwidth=1.1, label=< titular >, fontcolor="#262626"];
+  "D1" -> "AC" [color="#404040", style="solid", penwidth=1.1, label=< actos >, fontcolor="#262626"];
+  "D1" -> "GZ" [color="#404040", style="solid", penwidth=1.1, label=< gaceta >, fontcolor="#262626", minlen=2];
+  "D1" -> "SA" [color="#404040", style="solid", penwidth=1.1, label=< multas >, fontcolor="#262626", minlen=2];
+  "D1" -> "TR" [color="#404040", style="solid", penwidth=1.1, label=< radicado >, fontcolor="#262626", minlen=2];
+  "AC" -> "D2" [color="#404040", style="solid", penwidth=1.1];
+  "D2" -> "OUT" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D2" -> "E" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "TR" -> "D3" [color="#404040", style="solid", penwidth=1.1];
+  "D3" -> "DOCS" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D3" -> "NF" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "PI" -> "OUT" [color="#404040", style="solid", penwidth=1.1];
+  "PO" -> "OUT" [color="#404040", style="solid", penwidth=1.1];
+  "GZ" -> "OUT" [color="#404040", style="solid", penwidth=1.1];
+  "SA" -> "OUT" [color="#404040", style="solid", penwidth=1.1];
+  "DOCS" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "OUT" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "NF" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "E" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

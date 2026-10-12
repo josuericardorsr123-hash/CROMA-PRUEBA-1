@@ -1,0 +1,1228 @@
+[
+ {
+  "clave": "D00",
+  "titulo": "Arquitectura general de Croma",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "datos_almacen",
+    "decision",
+    "error_fallback",
+    "modelo_ia",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "datos_almacen": {
+    "fondo": "#56B4E9",
+    "texto": "#000000",
+    "ratio": 9.1,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "modelo_ia": {
+    "fondo": "#CC79A7",
+    "texto": "#000000",
+    "ratio": 6.86,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   },
+   "recurso_infra": {
+    "fondo": "#117733",
+    "texto": "#FFFFFF",
+    "ratio": 5.66,
+    "pasa": true
+   },
+   "servicio_externo": {
+    "fondo": "#8C6D31",
+    "texto": "#FFFFFF",
+    "ratio": 4.83,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 20,
+  "n_aristas": 29,
+  "n_decisiones": 2,
+  "es_dag": false,
+  "layout": {
+   "estrategia": [
+    "filas",
+    true,
+    4,
+    true
+   ],
+   "ancho_in": 8.32,
+   "alto_in": 12.06,
+   "letra_efectiva_pt": 7.0
+  }
+ },
+ {
+  "clave": "D01",
+  "titulo": "Ciclo de vida de una solicitud",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "datos_almacen",
+    "decision",
+    "error_fallback"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "datos_almacen": {
+    "fondo": "#56B4E9",
+    "texto": "#000000",
+    "ratio": 9.1,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "servicio_externo": {
+    "fondo": "#8C6D31",
+    "texto": "#FFFFFF",
+    "ratio": 4.83,
+    "pasa": true
+   }
+  },
+  "rutas_error": 3,
+  "n_nodos": 19,
+  "n_aristas": 28,
+  "n_decisiones": 9,
+  "es_dag": false,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    false
+   ],
+   "ancho_in": 10.93,
+   "alto_in": 13.89,
+   "letra_efectiva_pt": 5.9
+  }
+ },
+ {
+  "clave": "D02",
+  "titulo": "Rama Judicial: procesos, lotes y correos",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "datos_almacen",
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "datos_almacen": {
+    "fondo": "#56B4E9",
+    "texto": "#000000",
+    "ratio": 9.1,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   },
+   "servicio_externo": {
+    "fondo": "#8C6D31",
+    "texto": "#FFFFFF",
+    "ratio": 4.83,
+    "pasa": true
+   }
+  },
+  "rutas_error": 3,
+  "n_nodos": 20,
+  "n_aristas": 25,
+  "n_decisiones": 4,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    3,
+    false
+   ],
+   "ancho_in": 8.76,
+   "alto_in": 11.01,
+   "letra_efectiva_pt": 7.3
+  }
+ },
+ {
+  "clave": "D03",
+  "titulo": "Jurisprudencia de altas cortes y disciplina judicial",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 16,
+  "n_aristas": 20,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 8.44,
+   "alto_in": 11.51,
+   "letra_efectiva_pt": 7.3
+  }
+ },
+ {
+  "clave": "D04",
+  "titulo": "Empresas: RUES, Supersociedades, SIMEV y DIAN",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 17,
+  "n_aristas": 20,
+  "n_decisiones": 4,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "natural",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 10.21,
+   "alto_in": 10.4,
+   "letra_efectiva_pt": 6.3
+  }
+ },
+ {
+  "clave": "D05",
+  "titulo": "Supersociedades: insolvencia, Baranda y Relatoría",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 14,
+  "n_aristas": 17,
+  "n_decisiones": 2,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    true,
+    3,
+    true
+   ],
+   "ancho_in": 10.53,
+   "alto_in": 9.61,
+   "letra_efectiva_pt": 6.1
+  }
+ },
+ {
+  "clave": "D06",
+  "titulo": "Contratación pública: SECOP I y II y ANCP-CCE",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 15,
+  "n_aristas": 20,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "natural",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 8.49,
+   "alto_in": 10.31,
+   "letra_efectiva_pt": 7.5
+  }
+ },
+ {
+  "clave": "D07",
+  "titulo": "Verificación de personas naturales",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 18,
+  "n_aristas": 24,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    3,
+    true
+   ],
+   "ancho_in": 8.49,
+   "alto_in": 11.78,
+   "letra_efectiva_pt": 7.1
+  }
+ },
+ {
+  "clave": "D08",
+  "titulo": "Vehículos y tránsito: RUNT y SIMIT",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 17,
+  "n_aristas": 22,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 8.61,
+   "alto_in": 11.78,
+   "letra_efectiva_pt": 7.1
+  }
+ },
+ {
+  "clave": "D09",
+  "titulo": "Fuentes con sesión del titular y factura electrónica",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   },
+   "recurso_infra": {
+    "fondo": "#117733",
+    "texto": "#FFFFFF",
+    "ratio": 5.66,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 14,
+  "n_aristas": 16,
+  "n_decisiones": 4,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 8.47,
+   "alto_in": 10.51,
+   "letra_efectiva_pt": 7.6
+  }
+ },
+ {
+  "clave": "D10",
+  "titulo": "Normativa y regulación",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 16,
+  "n_aristas": 23,
+  "n_decisiones": 3,
+  "es_dag": false,
+  "layout": {
+   "estrategia": [
+    "natural",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 7.71,
+   "alto_in": 11.64,
+   "letra_efectiva_pt": 7.2
+  }
+ },
+ {
+  "clave": "D11",
+  "titulo": "Superintendencia de Industria y Comercio",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 16,
+  "n_aristas": 21,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "natural",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 9.44,
+   "alto_in": 9.51,
+   "letra_efectiva_pt": 6.8
+  }
+ },
+ {
+  "clave": "D12",
+  "titulo": "Catastro nacional del IGAC",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "datos_almacen",
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "datos_almacen": {
+    "fondo": "#56B4E9",
+    "texto": "#000000",
+    "ratio": 9.1,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 14,
+  "n_aristas": 16,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    true,
+    4,
+    true
+   ],
+   "ancho_in": 8.31,
+   "alto_in": 10.75,
+   "letra_efectiva_pt": 7.7
+  }
+ },
+ {
+  "clave": "D13",
+  "titulo": "Estadística oficial: DANE, BanRep, DNP, ICFES, MinEducación",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 12,
+  "n_aristas": 16,
+  "n_decisiones": 2,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "natural",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 7.47,
+   "alto_in": 10.6,
+   "letra_efectiva_pt": 7.9
+  }
+ },
+ {
+  "clave": "D14",
+  "titulo": "Fuentes sectoriales: INVIMA, ANM y SIATA",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 2,
+  "n_nodos": 13,
+  "n_aristas": 16,
+  "n_decisiones": 3,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 9.21,
+   "alto_in": 7.36,
+   "letra_efectiva_pt": 7.0
+  }
+ },
+ {
+  "clave": "D15",
+  "titulo": "Trámites del Estado y herramientas web",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "modelo_ia",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "modelo_ia": {
+    "fondo": "#CC79A7",
+    "texto": "#000000",
+    "ratio": 6.86,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 1,
+  "n_nodos": 10,
+  "n_aristas": 13,
+  "n_decisiones": 2,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "natural",
+    true,
+    4,
+    true
+   ],
+   "ancho_in": 7.17,
+   "alto_in": 7.62,
+   "letra_efectiva_pt": 8.9
+  }
+ },
+ {
+  "clave": "D16",
+  "titulo": "Monitores: alertas programadas por correo",
+  "checks": {
+   "nodos_no_alcanzables": [],
+   "nodos_sin_terminal": [],
+   "decisiones_incompletas": [],
+   "aristas_colgantes": [],
+   "nodos_aislados": [],
+   "recursos_faltantes": [],
+   "recursos_huerfanos": [],
+   "violaciones_dependencia_clean": [],
+   "ciclo_en_dag": false,
+   "categorias_sin_contraste": [
+    "decision",
+    "error_fallback",
+    "modelo_ia",
+    "proceso"
+   ]
+  },
+  "veredicto": "APROBADO_RENDER",
+  "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+  "contraste_texto_elegido": {
+   "control_orquestacion": {
+    "fondo": "#332288",
+    "texto": "#FFFFFF",
+    "ratio": 12.17,
+    "pasa": true
+   },
+   "decision": {
+    "fondo": "#E69F00",
+    "texto": "#000000",
+    "ratio": 9.32,
+    "pasa": true
+   },
+   "entrada_salida": {
+    "fondo": "#0072B2",
+    "texto": "#FFFFFF",
+    "ratio": 5.19,
+    "pasa": true
+   },
+   "error_fallback": {
+    "fondo": "#D55E00",
+    "texto": "#000000",
+    "ratio": 5.43,
+    "pasa": true
+   },
+   "modelo_ia": {
+    "fondo": "#CC79A7",
+    "texto": "#000000",
+    "ratio": 6.86,
+    "pasa": true
+   },
+   "proceso": {
+    "fondo": "#009E73",
+    "texto": "#000000",
+    "ratio": 6.14,
+    "pasa": true
+   }
+  },
+  "rutas_error": 3,
+  "n_nodos": 17,
+  "n_aristas": 21,
+  "n_decisiones": 4,
+  "es_dag": true,
+  "layout": {
+   "estrategia": [
+    "filas",
+    false,
+    4,
+    true
+   ],
+   "ancho_in": 9.71,
+   "alto_in": 11.06,
+   "letra_efectiva_pt": 6.6
+  }
+ }
+]

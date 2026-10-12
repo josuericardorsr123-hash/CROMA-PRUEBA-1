@@ -1,0 +1,1722 @@
+[
+ {
+  "tool": "rama_judicial_cases_by_entity",
+  "path": "/co/rama-judicial/cases-by-entity/v1",
+  "familia": "rama-judicial",
+  "endpoint": "cases-by-entity",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "rama_judicial_cases_by_radicado",
+  "path": "/co/rama-judicial/cases-by-radicado/v1",
+  "familia": "rama-judicial",
+  "endpoint": "cases-by-radicado",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "rama_judicial_cases_by_radicado_batch",
+  "path": "/co/rama-judicial/cases-by-radicado/v1/batch",
+  "familia": "rama-judicial",
+  "endpoint": "cases-by-radicado/batch",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "lote",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "rama_judicial_emails_search",
+  "path": "/co/rama-judicial/emails-search/v1",
+  "familia": "rama-judicial",
+  "endpoint": "emails-search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "rama_judicial_emails_by_court",
+  "path": "/co/rama-judicial/emails-by-court/v1",
+  "familia": "rama-judicial",
+  "endpoint": "emails-by-court",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "registraduria_vital_status",
+  "path": "/co/registraduria/vital-status/v1",
+  "familia": "registraduria",
+  "endpoint": "vital-status",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "registro_civil_birth_record",
+  "path": "/co/registro-civil/birth-record/v1",
+  "familia": "registro-civil",
+  "endpoint": "birth-record",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "ruaf_affiliations",
+  "path": "/co/ruaf/affiliations/v1",
+  "familia": "ruaf",
+  "endpoint": "affiliations",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "rues_entities_by_name",
+  "path": "/co/rues/entities-by-name/v1",
+  "familia": "rues",
+  "endpoint": "entities-by-name",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "rues_entity_by_nit",
+  "path": "/co/rues/entity-by-nit/v1",
+  "familia": "rues",
+  "endpoint": "entity-by-nit",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "policia_criminal_records",
+  "path": "/co/policia/criminal-records/v1",
+  "familia": "policia",
+  "endpoint": "criminal-records",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_conditions",
+  "path": "/co/siata/v1",
+  "familia": "siata",
+  "endpoint": "v1",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": true
+ },
+ {
+  "tool": "siata_geoportal_weather",
+  "path": "/co/siata-geoportal/weather/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "weather",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_weather_series",
+  "path": "/co/siata-geoportal/weather-series/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "weather-series",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_river_levels",
+  "path": "/co/siata-geoportal/river-levels/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "river-levels",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_rainfall",
+  "path": "/co/siata-geoportal/rainfall/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "rainfall",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_air_quality",
+  "path": "/co/siata-geoportal/air-quality/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "air-quality",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_citizen_sensors",
+  "path": "/co/siata-geoportal/citizen-sensors/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "citizen-sensors",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_forecast",
+  "path": "/co/siata-geoportal/forecast/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "forecast",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_alerts",
+  "path": "/co/siata-geoportal/alerts/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "alerts",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_seismic_events",
+  "path": "/co/siata-geoportal/seismic-events/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "seismic-events",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "siata_geoportal_cameras",
+  "path": "/co/siata-geoportal/cameras/v1",
+  "familia": "siata-geoportal",
+  "endpoint": "cameras",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "ancp_cce_conceptos_search",
+  "path": "/co/ancp-cce/conceptos-search/v1",
+  "familia": "ancp-cce",
+  "endpoint": "conceptos-search",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "ancp_cce_concepto",
+  "path": "/co/ancp-cce/concepto/v1",
+  "familia": "ancp-cce",
+  "endpoint": "concepto",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "cndj_rulings_search",
+  "path": "/co/cndj/rulings-search/v1",
+  "familia": "cndj",
+  "endpoint": "rulings-search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "cndj_ruling",
+  "path": "/co/cndj/ruling/v1",
+  "familia": "cndj",
+  "endpoint": "ruling",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "fiscalia_case",
+  "path": "/co/fiscalia/case/v1",
+  "familia": "fiscalia",
+  "endpoint": "case",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "anm_notices_search",
+  "path": "/co/anm/notices-search/v1",
+  "familia": "anm",
+  "endpoint": "notices-search",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "anm_notice",
+  "path": "/co/anm/notice/v1",
+  "familia": "anm",
+  "endpoint": "notice",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "contraloria_fiscal_records",
+  "path": "/co/contraloria/fiscal-records/v1",
+  "familia": "contraloria",
+  "endpoint": "fiscal-records",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_doctrina_search",
+  "path": "/co/dian/doctrina-search/v1",
+  "familia": "dian",
+  "endpoint": "doctrina-search",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_doctrina_document",
+  "path": "/co/dian/doctrina/v1",
+  "familia": "dian",
+  "endpoint": "doctrina",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_electronic_document",
+  "path": "/co/dian/electronic-document/v1",
+  "familia": "dian",
+  "endpoint": "electronic-document",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_muisca_electronic_invoices",
+  "path": "/co/dian-muisca/electronic-invoices/v1",
+  "familia": "dian-muisca",
+  "endpoint": "electronic-invoices",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_muisca_third_party_reports",
+  "path": "/co/dian-muisca/third-party-reports/v1",
+  "familia": "dian-muisca",
+  "endpoint": "third-party-reports",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_trade_directory_search",
+  "path": "/co/dian-trade/directory-search/v1",
+  "familia": "dian-trade",
+  "endpoint": "directory-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dian_trade_profile",
+  "path": "/co/dian-trade/profile/v1",
+  "familia": "dian-trade",
+  "endpoint": "profile",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dane_labour_market",
+  "path": "/co/dane/labour-market/v1",
+  "familia": "dane",
+  "endpoint": "labour-market",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dane_poverty",
+  "path": "/co/dane/poverty/v1",
+  "familia": "dane",
+  "endpoint": "poverty",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dane_municipal_ipm",
+  "path": "/co/dane/municipal-ipm/v1",
+  "familia": "dane",
+  "endpoint": "municipal-ipm",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dane_census_municipalities",
+  "path": "/co/dane/census-municipalities/v1",
+  "familia": "dane",
+  "endpoint": "census-municipalities",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "funcion_publica_norms_search",
+  "path": "/co/funcion-publica/norms-search/v1",
+  "familia": "funcion-publica",
+  "endpoint": "norms-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "funcion_publica_norm",
+  "path": "/co/funcion-publica/norm/v1",
+  "familia": "funcion-publica",
+  "endpoint": "norm",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "imprenta_gaceta_documents_search",
+  "path": "/co/imprenta/gaceta-documents-search/v1",
+  "familia": "imprenta",
+  "endpoint": "gaceta-documents-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "imprenta_gaceta_document",
+  "path": "/co/imprenta/gaceta-document/v1",
+  "familia": "imprenta",
+  "endpoint": "gaceta-document",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "imprenta_gacetas_search",
+  "path": "/co/imprenta/gacetas-search/v1",
+  "familia": "imprenta",
+  "endpoint": "gacetas-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "imprenta_diarios_search",
+  "path": "/co/imprenta/diarios-search/v1",
+  "familia": "imprenta",
+  "endpoint": "diarios-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_properties_search",
+  "path": "/co/igac/properties-search/v1",
+  "familia": "igac",
+  "endpoint": "properties-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_property",
+  "path": "/co/igac/property/v1",
+  "familia": "igac",
+  "endpoint": "property",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "lookup",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_property_by_point",
+  "path": "/co/igac/property-by-point/v1",
+  "familia": "igac",
+  "endpoint": "property-by-point",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "lookup",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_parcel",
+  "path": "/co/igac/parcel/v1",
+  "familia": "igac",
+  "endpoint": "parcel",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_parcels_search",
+  "path": "/co/igac/parcels-search/v1",
+  "familia": "igac",
+  "endpoint": "parcels-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_buildings_by_property",
+  "path": "/co/igac/buildings-by-property/v1",
+  "familia": "igac",
+  "endpoint": "buildings-by-property",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_blocks_search",
+  "path": "/co/igac/blocks-search/v1",
+  "familia": "igac",
+  "endpoint": "blocks-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_rural_districts_search",
+  "path": "/co/igac/rural-districts-search/v1",
+  "familia": "igac",
+  "endpoint": "rural-districts-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_sectors_search",
+  "path": "/co/igac/sectors-search/v1",
+  "familia": "igac",
+  "endpoint": "sectors-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_economic_zones_search",
+  "path": "/co/igac/economic-zones-search/v1",
+  "familia": "igac",
+  "endpoint": "economic-zones-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_physical_zones_search",
+  "path": "/co/igac/physical-zones-search/v1",
+  "familia": "igac",
+  "endpoint": "physical-zones-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_municipal_statistics",
+  "path": "/co/igac/municipal-statistics/v1",
+  "familia": "igac",
+  "endpoint": "municipal-statistics",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_cadastral_managers",
+  "path": "/co/igac/cadastral-managers/v1",
+  "familia": "igac",
+  "endpoint": "cadastral-managers",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_address_plates_by_property",
+  "path": "/co/igac/address-plates-by-property/v1",
+  "familia": "igac",
+  "endpoint": "address-plates-by-property",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "igac_street_names_search",
+  "path": "/co/igac/street-names-search/v1",
+  "familia": "igac",
+  "endpoint": "street-names-search",
+  "dominio": "Territorio y catastro (IGAC)",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "banrep_series_search",
+  "path": "/co/banrep/series-search/v1",
+  "familia": "banrep",
+  "endpoint": "series-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "banrep_series",
+  "path": "/co/banrep/series/v1",
+  "familia": "banrep",
+  "endpoint": "series",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "banrep_research_publications_search",
+  "path": "/co/banrep-research/publications-search/v1",
+  "familia": "banrep-research",
+  "endpoint": "publications-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "banrep_research_publication",
+  "path": "/co/banrep-research/publication/v1",
+  "familia": "banrep-research",
+  "endpoint": "publication",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "icfes_saber11_schools_search",
+  "path": "/co/icfes/saber11-schools-search/v1",
+  "familia": "icfes",
+  "endpoint": "saber11-schools-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "icfes_saber11_strata_search",
+  "path": "/co/icfes/saber11-strata-search/v1",
+  "familia": "icfes",
+  "endpoint": "saber11-strata-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "invima_registrations_search",
+  "path": "/co/invima/registrations-search/v1",
+  "familia": "invima",
+  "endpoint": "registrations-search",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "invima_registration",
+  "path": "/co/invima/registration/v1",
+  "familia": "invima",
+  "endpoint": "registration",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "invima_medicines_search",
+  "path": "/co/invima/medicines-search/v1",
+  "familia": "invima",
+  "endpoint": "medicines-search",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "invima_medicine",
+  "path": "/co/invima/medicine/v1",
+  "familia": "invima",
+  "endpoint": "medicine",
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "mineducacion_indicators_search",
+  "path": "/co/mineducacion/indicators-search/v1",
+  "familia": "mineducacion",
+  "endpoint": "indicators-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "procuraduria_disciplinary_records",
+  "path": "/co/procuraduria/disciplinary-records/v1",
+  "familia": "procuraduria",
+  "endpoint": "disciplinary-records",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "samai_processes",
+  "path": "/co/samai/processes/v1",
+  "familia": "samai",
+  "endpoint": "processes",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "samai_corporaciones",
+  "path": "/co/samai/corporaciones/v1",
+  "familia": "samai",
+  "endpoint": "corporaciones",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "samai_secciones",
+  "path": "/co/samai/secciones/v1",
+  "familia": "samai",
+  "endpoint": "secciones",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "samai_rulings_search",
+  "path": "/co/samai-rulings/search/v1",
+  "familia": "samai-rulings",
+  "endpoint": "search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "samai_rulings_ruling",
+  "path": "/co/samai-rulings/ruling/v1",
+  "familia": "samai-rulings",
+  "endpoint": "ruling",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_process",
+  "path": "/co/secop/process/v1",
+  "familia": "secop",
+  "endpoint": "process",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_contracts_by_provider",
+  "path": "/co/secop/contracts-by-provider/v1",
+  "familia": "secop",
+  "endpoint": "contracts-by-provider",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": true
+ },
+ {
+  "tool": "secop_processes_by_entity",
+  "path": "/co/secop/processes-by-entity/v1",
+  "familia": "secop",
+  "endpoint": "processes-by-entity",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": true
+ },
+ {
+  "tool": "secop_contract",
+  "path": "/co/secop/contract/v1",
+  "familia": "secop",
+  "endpoint": "contract",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_sanctions_by_provider",
+  "path": "/co/secop/sanctions-by-provider/v1",
+  "familia": "secop",
+  "endpoint": "sanctions-by-provider",
+  "dominio": "Contratación pública",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": true
+ },
+ {
+  "tool": "secop_processes_search",
+  "path": "/co/secop/processes-search/v1",
+  "familia": "secop",
+  "endpoint": "processes-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_contracts_search",
+  "path": "/co/secop/contracts-search/v1",
+  "familia": "secop",
+  "endpoint": "contracts-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_modifications_search",
+  "path": "/co/secop/modifications-search/v1",
+  "familia": "secop",
+  "endpoint": "modifications-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_suppliers_search",
+  "path": "/co/secop/suppliers-search/v1",
+  "familia": "secop",
+  "endpoint": "suppliers-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_bidders_search",
+  "path": "/co/secop/bidders-search/v1",
+  "familia": "secop",
+  "endpoint": "bidders-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_sanctions_search",
+  "path": "/co/secop/sanctions-search/v1",
+  "familia": "secop",
+  "endpoint": "sanctions-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_plans_search",
+  "path": "/co/secop/plans-search/v1",
+  "familia": "secop",
+  "endpoint": "plans-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_profile",
+  "path": "/co/secop/profile/v1",
+  "familia": "secop",
+  "endpoint": "profile",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_awards_search",
+  "path": "/co/secop/awards-search/v1",
+  "familia": "secop",
+  "endpoint": "awards-search",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_process_record",
+  "path": "/co/secop/process-record/v1",
+  "familia": "secop",
+  "endpoint": "process-record",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "secop_contract_record",
+  "path": "/co/secop/contract-record/v1",
+  "familia": "secop",
+  "endpoint": "contract-record",
+  "dominio": "Contratación pública",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "simit_account_status",
+  "path": "/co/simit/account-status/v1",
+  "familia": "simit",
+  "endpoint": "account-status",
+  "dominio": "Vehículos y tránsito",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "superfinanciera_regulations_search",
+  "path": "/co/superfinanciera/regulations-search/v1",
+  "familia": "superfinanciera",
+  "endpoint": "regulations-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "superfinanciera_regulation",
+  "path": "/co/superfinanciera/regulation/v1",
+  "familia": "superfinanciera",
+  "endpoint": "regulation",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "superfinanciera_complaints",
+  "path": "/co/superfinanciera/complaints/v1",
+  "familia": "superfinanciera",
+  "endpoint": "complaints",
+  "dominio": "Regulación y normativa",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "superfinanciera_doctrine_search",
+  "path": "/co/superfinanciera-doctrine/search/v1",
+  "familia": "superfinanciera-doctrine",
+  "endpoint": "search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "superfinanciera_doctrine_entry",
+  "path": "/co/superfinanciera-doctrine/entry/v1",
+  "familia": "superfinanciera-doctrine",
+  "endpoint": "entry",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "simev_shareholders",
+  "path": "/co/simev/shareholders/v1",
+  "familia": "simev",
+  "endpoint": "shareholders",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "adres_affiliation_status",
+  "path": "/co/adres/affiliation-status/v1",
+  "familia": "adres",
+  "endpoint": "affiliation-status",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "dnp_social_classification",
+  "path": "/co/dnp/social-classification/v1",
+  "familia": "dnp",
+  "endpoint": "social-classification",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "dnp_sisben_offices",
+  "path": "/co/dnp/sisben-offices/v1",
+  "familia": "dnp",
+  "endpoint": "sisben-offices",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "terridata_indicators_search",
+  "path": "/co/terridata/indicators-search/v1",
+  "familia": "terridata",
+  "endpoint": "indicators-search",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "terridata_series",
+  "path": "/co/terridata/series/v1",
+  "familia": "terridata",
+  "endpoint": "series",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "terridata_ranking",
+  "path": "/co/terridata/ranking/v1",
+  "familia": "terridata",
+  "endpoint": "ranking",
+  "dominio": "Estadística y macroeconomía",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_shareholders",
+  "path": "/co/supersociedades/shareholders/v1",
+  "familia": "supersociedades",
+  "endpoint": "shareholders",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_financial_statements",
+  "path": "/co/supersociedades/financial-statements/v1",
+  "familia": "supersociedades",
+  "endpoint": "financial-statements",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_companies_search",
+  "path": "/co/supersociedades/companies-search/v1",
+  "familia": "supersociedades",
+  "endpoint": "companies-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_company",
+  "path": "/co/supersociedades/company/v1",
+  "familia": "supersociedades",
+  "endpoint": "company",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_filing_statements",
+  "path": "/co/supersociedades/filing-statements/v1",
+  "familia": "supersociedades",
+  "endpoint": "filing-statements",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_ownership_search",
+  "path": "/co/supersociedades/ownership-search/v1",
+  "familia": "supersociedades",
+  "endpoint": "ownership-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_filing_ownership",
+  "path": "/co/supersociedades/filing-ownership/v1",
+  "familia": "supersociedades",
+  "endpoint": "filing-ownership",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_filing_disclosures",
+  "path": "/co/supersociedades/filing-disclosures/v1",
+  "familia": "supersociedades",
+  "endpoint": "filing-disclosures",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_insolvency_processes_search",
+  "path": "/co/supersociedades/insolvency-processes-search/v1",
+  "familia": "supersociedades",
+  "endpoint": "insolvency-processes-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_largest_companies_search",
+  "path": "/co/supersociedades/largest-companies-search/v1",
+  "familia": "supersociedades",
+  "endpoint": "largest-companies-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_supervised_entities_search",
+  "path": "/co/supersociedades/supervised-entities-search/v1",
+  "familia": "supersociedades",
+  "endpoint": "supervised-entities-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_publications_search",
+  "path": "/co/supersociedades-baranda/publications-search/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "publications-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_publication",
+  "path": "/co/supersociedades-baranda/publication/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "publication",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_decisions_search",
+  "path": "/co/supersociedades-baranda/decisions-search/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "decisions-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_decision",
+  "path": "/co/supersociedades-baranda/decision/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "decision",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_company_file",
+  "path": "/co/supersociedades-baranda/company-file/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "company-file",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_company_search",
+  "path": "/co/supersociedades-baranda/company-search/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "company-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_baranda_filing",
+  "path": "/co/supersociedades-baranda/filing/v1",
+  "familia": "supersociedades-baranda",
+  "endpoint": "filing",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_documents_search",
+  "path": "/co/supersociedades-relatoria/documents-search/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "documents-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_document",
+  "path": "/co/supersociedades-relatoria/document/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "document",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_historical_rulings_search",
+  "path": "/co/supersociedades-relatoria/historical-rulings-search/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "historical-rulings-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_opinion_files_search",
+  "path": "/co/supersociedades-relatoria/opinion-files-search/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "opinion-files-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_bulletins_search",
+  "path": "/co/supersociedades-relatoria/bulletins-search/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "bulletins-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_notices_search",
+  "path": "/co/supersociedades-relatoria/notices-search/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "notices-search",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "supersociedades_relatoria_notice",
+  "path": "/co/supersociedades-relatoria/notice/v1",
+  "familia": "supersociedades-relatoria",
+  "endpoint": "notice",
+  "dominio": "Empresas y mercado de valores",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "runt_vehicle_by_plate",
+  "path": "/co/runt/vehicle-by-plate/v1",
+  "familia": "runt",
+  "endpoint": "vehicle-by-plate",
+  "dominio": "Vehículos y tránsito",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "runt_vehicle_history_by_plate",
+  "path": "/co/runt/vehicle-history-by-plate/v1",
+  "familia": "runt",
+  "endpoint": "vehicle-history-by-plate",
+  "dominio": "Vehículos y tránsito",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "runt_citizen_by_document",
+  "path": "/co/runt/citizen-by-document/v1",
+  "familia": "runt",
+  "endpoint": "citizen-by-document",
+  "dominio": "Vehículos y tránsito",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "runt_citizen_by_plate",
+  "path": "/co/runt/citizen-by-plate/v1",
+  "familia": "runt",
+  "endpoint": "citizen-by-plate",
+  "dominio": "Vehículos y tránsito",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "consejo_estado_search",
+  "path": "/co/consejo-estado/search/v1",
+  "familia": "consejo-estado",
+  "endpoint": "search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "consejo_estado_providencia",
+  "path": "/co/consejo-estado/providencia/v1",
+  "familia": "consejo-estado",
+  "endpoint": "providencia",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "sicaac_insolvency_cases",
+  "path": "/co/sicaac/insolvency-cases/v1",
+  "familia": "sicaac",
+  "endpoint": "insolvency-cases",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "contaduria_state_delinquent_debtors",
+  "path": "/co/contaduria/state-delinquent-debtors/v1",
+  "familia": "contaduria",
+  "endpoint": "state-delinquent-debtors",
+  "dominio": "Verificación de personas",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "corte_constitucional_rulings_search",
+  "path": "/co/corte-constitucional/rulings-search/v1",
+  "familia": "corte-constitucional",
+  "endpoint": "rulings-search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "corte_constitucional_ruling",
+  "path": "/co/corte-constitucional/ruling/v1",
+  "familia": "corte-constitucional",
+  "endpoint": "ruling",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "corte_suprema_rulings_search",
+  "path": "/co/corte-suprema/rulings-search/v1",
+  "familia": "corte-suprema",
+  "endpoint": "rulings-search",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "corte_suprema_ruling",
+  "path": "/co/corte-suprema/ruling/v1",
+  "familia": "corte-suprema",
+  "endpoint": "ruling",
+  "dominio": "Justicia y jurisprudencia",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "creg_acts_search",
+  "path": "/co/creg/acts-search/v1",
+  "familia": "creg",
+  "endpoint": "acts-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "creg_act",
+  "path": "/co/creg/act/v1",
+  "familia": "creg",
+  "endpoint": "act",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_normativa_regulations_search",
+  "path": "/co/sic-normativa/regulations-search/v1",
+  "familia": "sic-normativa",
+  "endpoint": "regulations-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_normativa_regulation",
+  "path": "/co/sic-normativa/regulation/v1",
+  "familia": "sic-normativa",
+  "endpoint": "regulation",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_normativa_bulletins_search",
+  "path": "/co/sic-normativa/bulletins-search/v1",
+  "familia": "sic-normativa",
+  "endpoint": "bulletins-search",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_normativa_bulletin",
+  "path": "/co/sic-normativa/bulletin/v1",
+  "familia": "sic-normativa",
+  "endpoint": "bulletin",
+  "dominio": "Regulación y normativa",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_sanctions_sanctions_search",
+  "path": "/co/sic-sanctions/sanctions-search/v1",
+  "familia": "sic-sanctions",
+  "endpoint": "sanctions-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_actos_acts_search",
+  "path": "/co/sic-actos/acts-search/v1",
+  "familia": "sic-actos",
+  "endpoint": "acts-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_actos_act",
+  "path": "/co/sic-actos/act/v1",
+  "familia": "sic-actos",
+  "endpoint": "act",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_tramites_case",
+  "path": "/co/sic-tramites/case/v1",
+  "familia": "sic-tramites",
+  "endpoint": "case",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_gazette_entries_search",
+  "path": "/co/sic-gazette/entries-search/v1",
+  "familia": "sic-gazette",
+  "endpoint": "entries-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_gazette_issues_search",
+  "path": "/co/sic-gazette/issues-search/v1",
+  "familia": "sic-gazette",
+  "endpoint": "issues-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_gazette_issue",
+  "path": "/co/sic-gazette/issue/v1",
+  "familia": "sic-gazette",
+  "endpoint": "issue",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_trademarks_search",
+  "path": "/co/sic-ip/trademarks-search/v1",
+  "familia": "sic-ip",
+  "endpoint": "trademarks-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_patents_search",
+  "path": "/co/sic-ip/patents-search/v1",
+  "familia": "sic-ip",
+  "endpoint": "patents-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_designs_search",
+  "path": "/co/sic-ip/designs-search/v1",
+  "familia": "sic-ip",
+  "endpoint": "designs-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_resolutions_search",
+  "path": "/co/sic-ip/resolutions-search/v1",
+  "familia": "sic-ip",
+  "endpoint": "resolutions-search",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_trademark",
+  "path": "/co/sic-ip/trademark/v1",
+  "familia": "sic-ip",
+  "endpoint": "trademark",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "lookup",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_patent",
+  "path": "/co/sic-ip/patent/v1",
+  "familia": "sic-ip",
+  "endpoint": "patent",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "lookup",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_design",
+  "path": "/co/sic-ip/design/v1",
+  "familia": "sic-ip",
+  "endpoint": "design",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "lookup",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "sic_ip_trademarks_by_owner",
+  "path": "/co/sic-ip/trademarks-by-owner/v1",
+  "familia": "sic-ip",
+  "endpoint": "trademarks-by-owner",
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "suit_procedures_search",
+  "path": "/co/suit/procedures-search/v1",
+  "familia": "suit",
+  "endpoint": "procedures-search",
+  "dominio": "Trámites del Estado",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "suit_procedure",
+  "path": "/co/suit/procedure/v1",
+  "familia": "suit",
+  "endpoint": "procedure",
+  "dominio": "Trámites del Estado",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "gov_pages_search",
+  "path": "/co/gov-pages/search/v1",
+  "familia": "gov-pages",
+  "endpoint": "search",
+  "dominio": "Trámites del Estado",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "gov_pages_page",
+  "path": "/co/gov-pages/page/v1",
+  "familia": "gov-pages",
+  "endpoint": "page",
+  "dominio": "Trámites del Estado",
+  "modo": "dataset",
+  "async": false,
+  "deprecated": false
+ },
+ {
+  "tool": "bancolombia_accounts",
+  "path": "/co/bancolombia/accounts/v1",
+  "familia": "bancolombia",
+  "endpoint": "accounts",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ },
+ {
+  "tool": "bancolombia_transactions",
+  "path": "/co/bancolombia/transactions/v1",
+  "familia": "bancolombia",
+  "endpoint": "transactions",
+  "dominio": "Tributario y finanzas del titular",
+  "modo": "vivo",
+  "async": true,
+  "deprecated": false
+ }
+]

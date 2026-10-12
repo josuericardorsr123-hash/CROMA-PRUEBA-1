@@ -1,0 +1,213 @@
+[
+ {
+  "dominio": "Justicia y jurisprudencia",
+  "familias": [
+   "rama-judicial",
+   "cndj",
+   "fiscalia",
+   "samai",
+   "samai-rulings",
+   "consejo-estado",
+   "corte-constitucional",
+   "corte-suprema",
+   "sicaac"
+  ],
+  "n_familias": 9,
+  "endpoints": 20,
+  "dataset": 8,
+  "vivo": 11,
+  "lookup": 0,
+  "lote": 1,
+  "asincronos": 3,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Empresas y mercado de valores",
+  "familias": [
+   "rues",
+   "supersociedades",
+   "supersociedades-baranda",
+   "supersociedades-relatoria",
+   "simev",
+   "dian-trade"
+  ],
+  "n_familias": 6,
+  "endpoints": 30,
+  "dataset": 25,
+  "vivo": 5,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 3,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Contratación pública",
+  "familias": [
+   "secop",
+   "ancp-cce"
+  ],
+  "n_familias": 2,
+  "endpoints": 18,
+  "dataset": 11,
+  "vivo": 7,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 0,
+  "deprecados": 3
+ },
+ {
+  "dominio": "Verificación de personas",
+  "familias": [
+   "registraduria",
+   "registro-civil",
+   "ruaf",
+   "policia",
+   "procuraduria",
+   "contraloria",
+   "contaduria",
+   "adres",
+   "dnp"
+  ],
+  "n_familias": 9,
+  "endpoints": 10,
+  "dataset": 0,
+  "vivo": 10,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 4,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Vehículos y tránsito",
+  "familias": [
+   "runt",
+   "simit"
+  ],
+  "n_familias": 2,
+  "endpoints": 5,
+  "dataset": 0,
+  "vivo": 5,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 5,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Tributario y finanzas del titular",
+  "familias": [
+   "dian",
+   "dian-muisca",
+   "bancolombia"
+  ],
+  "n_familias": 3,
+  "endpoints": 7,
+  "dataset": 0,
+  "vivo": 7,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 5,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Regulación y normativa",
+  "familias": [
+   "funcion-publica",
+   "imprenta",
+   "superfinanciera",
+   "superfinanciera-doctrine",
+   "creg",
+   "sic-normativa"
+  ],
+  "n_familias": 6,
+  "endpoints": 17,
+  "dataset": 16,
+  "vivo": 1,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 1,
+  "deprecados": 0
+ },
+ {
+  "dominio": "SIC: consumidor y propiedad industrial",
+  "familias": [
+   "sic-sanctions",
+   "sic-actos",
+   "sic-tramites",
+   "sic-gazette",
+   "sic-ip"
+  ],
+  "n_familias": 5,
+  "endpoints": 15,
+  "dataset": 10,
+  "vivo": 2,
+  "lookup": 3,
+  "lote": 0,
+  "asincronos": 5,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Territorio y catastro (IGAC)",
+  "familias": [
+   "igac"
+  ],
+  "n_familias": 1,
+  "endpoints": 15,
+  "dataset": 13,
+  "vivo": 0,
+  "lookup": 2,
+  "lote": 0,
+  "asincronos": 0,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Estadística y macroeconomía",
+  "familias": [
+   "dane",
+   "banrep",
+   "banrep-research",
+   "terridata",
+   "icfes",
+   "mineducacion"
+  ],
+  "n_familias": 6,
+  "endpoints": 14,
+  "dataset": 14,
+  "vivo": 0,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 0,
+  "deprecados": 0
+ },
+ {
+  "dominio": "Sectoriales: salud, minería y ambiente",
+  "familias": [
+   "invima",
+   "anm",
+   "siata",
+   "siata-geoportal"
+  ],
+  "n_familias": 4,
+  "endpoints": 17,
+  "dataset": 6,
+  "vivo": 11,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 0,
+  "deprecados": 1
+ },
+ {
+  "dominio": "Trámites del Estado",
+  "familias": [
+   "suit",
+   "gov-pages"
+  ],
+  "n_familias": 2,
+  "endpoints": 4,
+  "dataset": 4,
+  "vivo": 0,
+  "lookup": 0,
+  "lote": 0,
+  "asincronos": 0,
+  "deprecados": 0
+ }
+]

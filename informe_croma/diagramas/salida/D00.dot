@@ -1,0 +1,80 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Arquitectura general de Croma</B><BR/><FONT POINT-SIZE="9">Arquitectura C4 (contexto y contenedores) · v1.0 · 2026-10-12 · D00</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Actores</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "U" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Usuario o</B><BR/>sistema cliente<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R11</I></FONT>>];
+    "C1" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#CC79A7", color="#1A1A1A", fontcolor="#000000", label=<<B>Cliente MCP</B><BR/>Claude · ChatGPT · Cursor<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R09 · R01</I></FONT>>];
+    "C2" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Código propio</B><BR/>REST + Bearer<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R01</I></FONT>>];
+    "C3" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#117733", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Consola</B><BR/>platform.usecroma.com<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R01</I></FONT>>];
+    "CL" [shape=box, peripheries=2, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>Croma Legal</B><BR/>monitoreo judicial<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R10</I></FONT>>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Superficies</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#EBE9F3"; color="#8F85BE"; penwidth=1.0;
+    "MCP" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Servidor MCP</B><BR/>api.croma.run/mcp<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R09</I></FONT>>];
+    "REST" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>API REST</B><BR/>POST …/v1<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R15</I></FONT>>];
+  }
+  subgraph cluster_2 {
+    label=<<B>Núcleo Croma</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E7F1EB"; color="#7CB48F"; penwidth=1.0;
+    "G" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#117733", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Puerta de entrada</B><BR/>llave · créditos · topes<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R01 · R02</I></FONT>>];
+    "RT" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Modo del endpoint?</B>>];
+    "DS" [shape=cylinder, peripheries=1, style="filled", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>Copia dataset</B><BR/>ms · as_of · 1 crédito<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "LK" [shape=cylinder, peripheries=1, style="filled", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>Almacén de</B><BR/>lookups<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R07</I></FONT>>];
+    "LV" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>Conector en vivo</B><BR/>10 créditos<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R02</I></FONT>>];
+    "AS" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Asíncrono?</B>>];
+    "JQ" [shape=box, peripheries=2, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Cola de trabajos</B><BR/>≤55 s · polling · callback<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R05 · R16</I></FONT>>];
+    "CN" [shape=cylinder, peripheries=1, style="filled", fillcolor="#117733", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Conexiones cifradas</B><BR/>DIAN · Bancolombia<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R12</I></FONT>>];
+    "MO" [shape=box, peripheries=2, style="filled,rounded", fillcolor="#332288", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Monitores</B><BR/>(beta privada)<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R13 · R14</I></FONT>>];
+    "SRC" [shape=box3d, peripheries=1, style="filled", fillcolor="#8C6D31", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fuentes oficiales</B><BR/>55 familias · 172 endpoints<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R04</I></FONT>>];
+    "ERR" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>{error}</B><BR/>400·401·402·429·5xx>];
+    "OUT" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Respuesta</B><BR/>{ data } + procedencia<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R10</I></FONT>>];
+    "MAIL" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Correo con</B><BR/>novedades<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R13</I></FONT>>];
+  }
+  { rank=same; "U"; }
+  { rank=same; "C1"; "C2"; "C3"; "CL"; }
+  { rank=same; "MCP"; "REST"; }
+  { rank=same; "G"; "RT"; "CN"; }
+  { rank=same; "DS"; "LK"; "LV"; "AS"; }
+  { rank=same; "JQ"; "MO"; }
+  { rank=same; "SRC"; "MAIL"; }
+  { rank=same; "ERR"; }
+  { rank=same; "OUT"; }
+  "U" -> "C1" [color="#404040", style="solid", penwidth=1.1, label=< conversa >, fontcolor="#262626"];
+  "U" -> "C2" [color="#404040", style="solid", penwidth=1.1, label=< integra >, fontcolor="#262626"];
+  "U" -> "C3" [color="#404040", style="solid", penwidth=1.1, label=< administra >, fontcolor="#262626"];
+  "U" -> "CL" [color="#404040", style="solid", penwidth=1.1, label=< opera >, fontcolor="#262626"];
+  "C1" -> "MCP" [color="#404040", style="solid", penwidth=1.1, label=< tool call >, fontcolor="#262626"];
+  "C2" -> "REST" [color="#404040", style="solid", penwidth=1.1, label=< POST JSON >, fontcolor="#262626"];
+  "CL" -> "REST" [color="#404040", style="solid", penwidth=1.1, label=< lotes >, fontcolor="#262626"];
+  "MCP" -> "G" [color="#404040", style="solid", penwidth=1.1];
+  "REST" -> "G" [color="#404040", style="solid", penwidth=1.1];
+  "G" -> "RT" [color="#404040", style="solid", penwidth=1.1, label=< autorizado >, fontcolor="#262626"];
+  "G" -> "ERR" [color="#D55E00", style="solid", penwidth=1.4, label=< rechazo >, fontcolor="#D55E00"];
+  "RT" -> "DS" [color="#404040", style="solid", penwidth=1.1, label=< dataset >, fontcolor="#262626"];
+  "RT" -> "LK" [color="#404040", style="solid", penwidth=1.1, label=< lookup >, fontcolor="#262626"];
+  "RT" -> "LV" [color="#404040", style="solid", penwidth=1.1, label=< vivo >, fontcolor="#262626"];
+  "LK" -> "SRC" [color="#332288", style="bold", penwidth=1.8, label=< remite a: vencida >, fontcolor="#332288", constraint=false];
+  "LK" -> "OUT" [color="#404040", style="solid", penwidth=1.1, label=< <I>copia</I> >, fontcolor="#262626"];
+  "LV" -> "AS" [color="#404040", style="solid", penwidth=1.1];
+  "AS" -> "JQ" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "AS" -> "SRC" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "JQ" -> "SRC" [color="#404040", style="solid", penwidth=1.1, label=< ejecuta >, fontcolor="#262626"];
+  "CN" -> "LV" [color="#117733", style="dashed", penwidth=1.2, label=< sesión >, fontcolor="#262626", constraint=false];
+  "C3" -> "CN" [color="#404040", style="solid", penwidth=1.1, label=< connect >, fontcolor="#262626", constraint=false];
+  "C3" -> "MO" [color="#404040", style="solid", penwidth=1.1, label=< crea >, fontcolor="#262626", constraint=false];
+  "MO" -> "RT" [color="#404040", style="solid", penwidth=1.1, label=< consulta >, fontcolor="#262626", constraint=false];
+  "MO" -> "MAIL" [color="#404040", style="solid", penwidth=1.1, label=< novedades >, fontcolor="#262626"];
+  "DS" -> "OUT" [color="#404040", style="solid", penwidth=1.1, label=< <I>resultados</I> >, fontcolor="#262626"];
+  "SRC" -> "OUT" [color="#404040", style="solid", penwidth=1.1, label=< <I>registro</I> >, fontcolor="#262626"];
+  "SRC" -> "ERR" [color="#D55E00", style="solid", penwidth=1.4, label=< caída >, fontcolor="#D55E00"];
+  "ERR" -> "OUT" [color="#404040", style="solid", penwidth=1.1, label=< sobre >, fontcolor="#262626"];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#CC79A7"></TD><TD ALIGN="LEFT">Modelo de IA / agente</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#332288"></TD><TD ALIGN="LEFT">Control / orquestación</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#117733"></TD><TD ALIGN="LEFT">Recurso de infraestructura</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#56B4E9"></TD><TD ALIGN="LEFT">Datos / almacén</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#8C6D31"></TD><TD ALIGN="LEFT">Fuente oficial externa</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD><TD ALIGN="CENTER"><FONT COLOR="#332288"><B>——→</B></FONT></TD><TD ALIGN="LEFT">remite a</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">dato (cursiva)</TD><TD ALIGN="CENTER"><FONT COLOR="#117733">- - →</FONT></TD><TD ALIGN="LEFT">depende de</TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "OUT" -> "__leyenda" [style=invis];
+  "MAIL" -> "__leyenda" [style=invis];
+}

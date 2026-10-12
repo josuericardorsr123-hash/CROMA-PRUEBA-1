@@ -1,0 +1,57 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Catastro nacional del IGAC</B><BR/><FONT POINT-SIZE="9">Flujo de algoritmo · v1.0 · 2026-10-12 · D12</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Consulta</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F5F1"; color="#73CAB2"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Ubicación, dirección</B><BR/>o número predial<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R10</I></FONT>>];
+    "D1" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Catastro del IGAC?</B>>];
+    "D2" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Qué tienes?</B>>];
+    "PT" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>igac_property_by_point</B><BR/>lat · lon WGS84<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R07</I></FONT>>];
+    "PS" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>igac_properties_search</B><BR/>municipio · manzana<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03 · R18</I></FONT>>];
+    "PR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>igac_property</B><BR/>lookup 30 días<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R07 · R04</I></FONT>>];
+    "D3" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Hay predio en el punto?</B>>];
+    "NO" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Gestor catastral</B><BR/>propio (5 territorios)>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Contexto</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#EEF8FD"; color="#A2D6F3"; penwidth=1.0;
+    "AV" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Avalúo, áreas, destino,</B><BR/>polígono GeoJSON>];
+    "ZN" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>economic_zones ·</B><BR/>physical_zones · parcel<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "ST" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>igac_municipal_</B><BR/>statistics<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+    "NF" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>found:false</B><BR/>espacio público>];
+    "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: avalúo</B><BR/>con contexto>];
+    "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: consultar</B><BR/>al gestor>];
+  }
+  { rank=same; "S"; }
+  { rank=same; "D1"; }
+  { rank=same; "D2"; "NO"; }
+  { rank=same; "PT"; "PS"; "PR"; }
+  { rank=same; "D3"; }
+  { rank=same; "AV"; "NF"; "FER"; }
+  { rank=same; "ZN"; }
+  { rank=same; "ST"; }
+  { rank=same; "FOK"; }
+  "S" -> "D1" [color="#404040", style="solid", penwidth=1.1];
+  "D1" -> "D2" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D1" -> "NO" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "D2" -> "PT" [color="#404040", style="solid", penwidth=1.1, label=< coordenadas >, fontcolor="#262626"];
+  "D2" -> "PS" [color="#404040", style="solid", penwidth=1.1, label=< municipio >, fontcolor="#262626"];
+  "D2" -> "PR" [color="#404040", style="solid", penwidth=1.1, label=< número >, fontcolor="#262626"];
+  "PS" -> "PR" [color="#332288", style="bold", penwidth=1.8, label=< remite a >, fontcolor="#332288", constraint=false];
+  "PT" -> "D3" [color="#404040", style="solid", penwidth=1.1];
+  "D3" -> "AV" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D3" -> "NF" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "PR" -> "AV" [color="#404040", style="solid", penwidth=1.1];
+  "AV" -> "ZN" [color="#404040", style="solid", penwidth=1.1];
+  "ZN" -> "ST" [color="#404040", style="solid", penwidth=1.1];
+  "ST" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "NF" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "NO" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#56B4E9"></TD><TD ALIGN="LEFT">Datos / almacén</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD><TD ALIGN="CENTER"><FONT COLOR="#332288"><B>——→</B></FONT></TD><TD ALIGN="LEFT">remite a</TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

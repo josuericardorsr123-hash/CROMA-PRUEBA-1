@@ -1,0 +1,76 @@
+digraph G {
+  graph [fontname="Liberation Serif", fontsize=11.5, labelloc=t, labeljust=c, label=<<B>Croma × Colombia · Rama Judicial: procesos, lotes y correos</B><BR/><FONT POINT-SIZE="9">Flujo de algoritmo · v1.0 · 2026-10-12 · D02</FONT>>,
+         rankdir=TB, newrank=true, compound=true, nodesep=0.16, ranksep=0.30,
+         splines=spline, pad=0.15, bgcolor="white"];
+  node  [fontname="Liberation Serif", fontsize=10, style="filled", penwidth=0.9, margin="0.06,0.03"];
+  edge  [fontname="Liberation Serif", fontsize=8.5, arrowsize=0.6];
+  subgraph cluster_0 {
+    label=<<B>Entrada</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "S" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Procesos de una parte</B><BR/>o seguimiento de casos<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R11</I></FONT>>];
+    "D1" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Qué identificador?</B>>];
+  }
+  subgraph cluster_1 {
+    label=<<B>Consulta</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F5F1"; color="#73CAB2"; penwidth=1.0;
+    "BE" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>cases_by_entity</B><BR/>nombre · active_only<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R10</I></FONT>>];
+    "BR" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>cases_by_radicado</B><BR/>20 a 25 dígitos<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R10</I></FONT>>];
+    "BB" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>cases_by_radicado_batch</B><BR/>1 a 50 ítems<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R10 · R06</I></FONT>>];
+    "EM" [shape=box, peripheries=1, style="filled,rounded", fillcolor="#009E73", color="#1A1A1A", fontcolor="#000000", label=<<B>emails_by_court</B><BR/>12 dígitos o radicado<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R10</I></FONT>>];
+    "D2" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Demasiadas coincidencias?</B>>];
+    "LC" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Casos: radicado,</B><BR/>despacho, partes>];
+    "VB" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿Ítems bien formados?</B>>];
+    "SRC" [shape=box3d, peripheries=1, style="filled", fillcolor="#8C6D31", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Consulta Judicial</B><BR/>en vivo · 10 créditos<BR/><FONT POINT-SIZE="7" COLOR="#FFFFFF"><I>rec. R04 · R02</I></FONT>>];
+    "DIR" [shape=cylinder, peripheries=1, style="filled", fillcolor="#56B4E9", color="#1A1A1A", fontcolor="#000000", label=<<B>Directorio de correos</B><BR/>dataset semanal<BR/><FONT POINT-SIZE="7" COLOR="#000000"><I>rec. R03</I></FONT>>];
+  }
+  subgraph cluster_2 {
+    label=<<B>Resultado</B>>; fontsize=10; fontcolor="#1A1A1A"; labeljust=l;
+    style="rounded,filled"; fillcolor="#E6F1F7"; color="#73B1D5"; penwidth=1.0;
+    "D3" [shape=diamond, peripheries=1, style="filled", fillcolor="#E69F00", color="#1A1A1A", fontcolor="#000000", label=<<B>¿found?</B>>];
+    "ACT" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Metadatos +</B><BR/>40 actuaciones>];
+    "NF" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>found:false</B><BR/>private_only>];
+    "MB" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Buzón del despacho</B><BR/>y áreas>];
+  }
+  "E1" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>too_many_results:</B><BR/>nombre exacto>];
+  "E2" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>400 items.N</B><BR/>nada se ejecuta>];
+  "E3" [shape=parallelogram, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>5xx upstream_error</B>>];
+  "FOK" [shape=ellipse, peripheries=1, style="filled", fillcolor="#0072B2", color="#1A1A1A", fontcolor="#FFFFFF", label=<<B>Fin: expediente</B><BR/>actualizado>];
+  "FER" [shape=ellipse, peripheries=1, style="filled", fillcolor="#D55E00", color="#1A1A1A", fontcolor="#000000", label=<<B>Fin: refinar</B><BR/>o reintentar>];
+  { rank=same; "S"; }
+  { rank=same; "D1"; }
+  { rank=same; "BE"; "BR"; "BB"; }
+  { rank=same; "EM"; "D2"; "VB"; }
+  { rank=same; "LC"; "SRC"; "DIR"; }
+  { rank=same; "D3"; "MB"; "E1"; }
+  { rank=same; "ACT"; "NF"; "E2"; }
+  { rank=same; "E3"; "FOK"; }
+  { rank=same; "FER"; }
+  "S" -> "D1" [color="#404040", style="solid", penwidth=1.1];
+  "D1" -> "BE" [color="#404040", style="solid", penwidth=1.1, label=< nombre >, fontcolor="#262626"];
+  "D1" -> "BR" [color="#404040", style="solid", penwidth=1.1, label=< radicado >, fontcolor="#262626"];
+  "D1" -> "BB" [color="#404040", style="solid", penwidth=1.1, label=< lista >, fontcolor="#262626"];
+  "D1" -> "EM" [color="#404040", style="solid", penwidth=1.1, label=< correo >, fontcolor="#262626"];
+  "BE" -> "D2" [color="#404040", style="solid", penwidth=1.1];
+  "D2" -> "E1" [color="#D55E00", style="solid", penwidth=1.4, label=< sí >, fontcolor="#D55E00"];
+  "D2" -> "LC" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "LC" -> "BR" [color="#332288", style="bold", penwidth=1.8, label=< remite a >, fontcolor="#332288", constraint=false];
+  "BR" -> "SRC" [color="#404040", style="solid", penwidth=1.1];
+  "BB" -> "VB" [color="#404040", style="solid", penwidth=1.1];
+  "VB" -> "SRC" [color="#404040", style="solid", penwidth=1.1, label=< sí: por ítem >, fontcolor="#262626"];
+  "VB" -> "E2" [color="#D55E00", style="solid", penwidth=1.4, label=< no >, fontcolor="#D55E00"];
+  "SRC" -> "D3" [color="#404040", style="solid", penwidth=1.1, label=< responde >, fontcolor="#262626"];
+  "SRC" -> "E3" [color="#D55E00", style="solid", penwidth=1.4, label=< falla >, fontcolor="#D55E00"];
+  "D3" -> "ACT" [color="#404040", style="solid", penwidth=1.1, label=< sí >, fontcolor="#262626"];
+  "D3" -> "NF" [color="#404040", style="solid", penwidth=1.1, label=< no >, fontcolor="#262626"];
+  "EM" -> "DIR" [color="#404040", style="solid", penwidth=1.1];
+  "DIR" -> "MB" [color="#404040", style="solid", penwidth=1.1, label=< <I>datos</I> >, fontcolor="#262626"];
+  "ACT" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "NF" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "MB" -> "FOK" [color="#404040", style="solid", penwidth=1.1];
+  "E1" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "E2" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "E3" -> "FER" [color="#404040", style="solid", penwidth=1.1];
+  "__leyenda" [shape=plain, style="", fontsize=9, label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD ALIGN="LEFT"><B>Leyenda</B> <FONT COLOR="#4D4D4D"><I>· formas: óvalo inicio/fin · rombo decisión · rectángulo proceso · paralelogramo E/S · cilindro datos · rec. Rxx = recursos</I></FONT></TD></TR><TR><TD ALIGN="LEFT"><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1" CELLPADDING="1"><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#0072B2"></TD><TD ALIGN="LEFT">Entrada / salida</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#E69F00"></TD><TD ALIGN="LEFT">Decisión</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#009E73"></TD><TD ALIGN="LEFT">Proceso / herramienta</TD></TR><TR><TD WIDTH="16" HEIGHT="10" BGCOLOR="#8C6D31"></TD><TD ALIGN="LEFT">Fuente oficial externa</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#56B4E9"></TD><TD ALIGN="LEFT">Datos / almacén</TD><TD WIDTH="16" HEIGHT="10" BGCOLOR="#D55E00"></TD><TD ALIGN="LEFT">Error / contingencia</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">flujo</TD><TD ALIGN="CENTER"><FONT COLOR="#D55E00">——→</FONT></TD><TD ALIGN="LEFT">ruta de error</TD><TD ALIGN="CENTER"><FONT COLOR="#332288"><B>——→</B></FONT></TD><TD ALIGN="LEFT">remite a</TD></TR><TR><TD ALIGN="CENTER"><FONT COLOR="#404040">——→</FONT></TD><TD ALIGN="LEFT">dato (cursiva)</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR></TABLE></TD></TR></TABLE>>];
+  "FOK" -> "__leyenda" [style=invis];
+  "FER" -> "__leyenda" [style=invis];
+}

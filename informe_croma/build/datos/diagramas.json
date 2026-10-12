@@ -1,0 +1,4138 @@
+[
+ {
+  "clave": "D00",
+  "titulo": "Arquitectura general de Croma",
+  "tipo_diagrama": "Arquitectura C4 (contexto y contenedores)",
+  "objetivo": "Mostrar cómo una necesidad de información viaja desde el usuario o su agente hasta la fuente oficial y regresa como JSON tipado.",
+  "es_dag": false,
+  "categorias": [
+   "Control / orquestación",
+   "Datos / almacén",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Fuente oficial externa",
+   "Modelo de IA / agente",
+   "Proceso / herramienta",
+   "Recurso de infraestructura"
+  ],
+  "nodos": [
+   {
+    "id": "U",
+    "label": "Usuario o sistema cliente",
+    "tipo": "terminador"
+   },
+   {
+    "id": "C1",
+    "label": "Cliente MCP Claude · ChatGPT · Cursor",
+    "tipo": "proceso"
+   },
+   {
+    "id": "C2",
+    "label": "Código propio REST + Bearer",
+    "tipo": "proceso"
+   },
+   {
+    "id": "C3",
+    "label": "Consola platform.usecroma.com",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CL",
+    "label": "Croma Legal monitoreo judicial",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "MCP",
+    "label": "Servidor MCP api.croma.run/mcp",
+    "tipo": "proceso"
+   },
+   {
+    "id": "REST",
+    "label": "API REST POST …/v1",
+    "tipo": "proceso"
+   },
+   {
+    "id": "G",
+    "label": "Puerta de entrada llave · créditos · topes",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RT",
+    "label": "¿Modo del endpoint?",
+    "tipo": "decision"
+   },
+   {
+    "id": "DS",
+    "label": "Copia dataset ms · as_of · 1 crédito",
+    "tipo": "datos"
+   },
+   {
+    "id": "LK",
+    "label": "Almacén de lookups",
+    "tipo": "datos"
+   },
+   {
+    "id": "LV",
+    "label": "Conector en vivo 10 créditos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "AS",
+    "label": "¿Asíncrono?",
+    "tipo": "decision"
+   },
+   {
+    "id": "JQ",
+    "label": "Cola de trabajos ≤55 s · polling · callback",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "CN",
+    "label": "Conexiones cifradas DIAN · Bancolombia",
+    "tipo": "datos"
+   },
+   {
+    "id": "MO",
+    "label": "Monitores (beta privada)",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "SRC",
+    "label": "Fuentes oficiales 55 familias · 172 endpoints",
+    "tipo": "externo"
+   },
+   {
+    "id": "ERR",
+    "label": "{error} 400·401·402·429·5xx",
+    "tipo": "io"
+   },
+   {
+    "id": "OUT",
+    "label": "Respuesta { data } + procedencia",
+    "tipo": "terminador"
+   },
+   {
+    "id": "MAIL",
+    "label": "Correo con novedades",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R01",
+    "tipo": "api",
+    "detalle": "Llave de organización (Bearer croma_live_… u OAuth MCP)",
+    "criticidad": "ALTA",
+    "riesgo": "Da acceso total a la organización; rotar si se filtra",
+    "nodos": [
+     "C1",
+     "C2",
+     "C3",
+     "G"
+    ],
+    "remite": "Consola de Croma (emitir o rotar llaves)"
+   },
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "G",
+     "LV"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "DS"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "SRC"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "AS",
+     "JQ"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R07",
+    "tipo": "storage",
+    "detalle": "Almacén de lookups (served_from copy/upstream/stale)",
+    "criticidad": "MEDIA",
+    "riesgo": "Ventana de frescura por fuente (p. ej. IGAC 30 días)",
+    "nodos": [
+     "LK"
+    ],
+    "remite": "Fuente oficial al vencer la ventana"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "C1",
+     "MCP"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "CL",
+     "OUT"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "U"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   },
+   {
+    "id": "R12",
+    "tipo": "servicio",
+    "detalle": "Conexión cifrada del titular (DIAN, Bancolombia)",
+    "criticidad": "ALTA",
+    "riesgo": "Máx. 5 por fuente; cupo diario de inicios de sesión",
+    "nodos": [
+     "CN"
+    ],
+    "remite": "Consola: *_connect / *_delete_connection"
+   },
+   {
+    "id": "R13",
+    "tipo": "servicio",
+    "detalle": "Correo de notificación (1 a 3 destinatarios)",
+    "criticidad": "BAJA",
+    "riesgo": "Monitores en beta privada",
+    "nodos": [
+     "MO",
+     "MAIL"
+    ],
+    "remite": "Destinatarios (máx. 3) y baja por enlace"
+   },
+   {
+    "id": "R14",
+    "tipo": "modelo",
+    "detalle": "Filtro de relevancia en lenguaje natural",
+    "criticidad": "BAJA",
+    "riesgo": "Filas descartadas quedan con relevant:false",
+    "nodos": [
+     "MO"
+    ],
+    "remite": "list_monitor_matches (relevant:false)"
+   },
+   {
+    "id": "R15",
+    "tipo": "dato",
+    "detalle": "Catálogo y OpenAPI (/catalog, /openapi)",
+    "criticidad": "BAJA",
+    "riesgo": "Fuente de verdad de rutas y esquemas",
+    "nodos": [
+     "REST",
+     "RT"
+    ],
+    "remite": "OpenAPI y /catalog"
+   },
+   {
+    "id": "R16",
+    "tipo": "api",
+    "detalle": "Webhook del cliente (callback_url HTTPS + HMAC)",
+    "criticidad": "MEDIA",
+    "riesgo": "Solo hosts públicos; responder 2xx rápido",
+    "nodos": [
+     "JQ"
+    ],
+    "remite": "Endpoint del cliente con firma HMAC"
+   }
+  ],
+  "validacion": {
+   "clave": "D00",
+   "titulo": "Arquitectura general de Croma",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "datos_almacen",
+     "decision",
+     "error_fallback",
+     "modelo_ia",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "datos_almacen": {
+     "fondo": "#56B4E9",
+     "texto": "#000000",
+     "ratio": 9.1,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "modelo_ia": {
+     "fondo": "#CC79A7",
+     "texto": "#000000",
+     "ratio": 6.86,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    },
+    "recurso_infra": {
+     "fondo": "#117733",
+     "texto": "#FFFFFF",
+     "ratio": 5.66,
+     "pasa": true
+    },
+    "servicio_externo": {
+     "fondo": "#8C6D31",
+     "texto": "#FFFFFF",
+     "ratio": 4.83,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 20,
+   "n_aristas": 29,
+   "n_decisiones": 2,
+   "es_dag": false,
+   "layout": {
+    "estrategia": [
+     "filas",
+     true,
+     4,
+     true
+    ],
+    "ancho_in": 8.32,
+    "alto_in": 12.06,
+    "letra_efectiva_pt": 7.0
+   }
+  }
+ },
+ {
+  "clave": "D01",
+  "titulo": "Ciclo de vida de una solicitud",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Explicar, decisión por decisión, qué ocurre con cada llamada y qué respuesta o error puede esperar quien integra.",
+  "es_dag": false,
+  "categorias": [
+   "Control / orquestación",
+   "Datos / almacén",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Fuente oficial externa"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Llamada MCP o POST …/v1",
+    "tipo": "terminador"
+   },
+   {
+    "id": "V",
+    "label": "¿Admitida? (esquema, llave, créditos, topes)",
+    "tipo": "decision"
+   },
+   {
+    "id": "CH",
+    "label": "¿En caché?",
+    "tipo": "decision"
+   },
+   {
+    "id": "M",
+    "label": "¿Modo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "DSQ",
+    "label": "Copia completa ms · 1 crédito",
+    "tipo": "proceso"
+   },
+   {
+    "id": "LKQ",
+    "label": "¿Lectura vigente?",
+    "tipo": "decision"
+   },
+   {
+    "id": "ASY",
+    "label": "¿Asíncrono?",
+    "tipo": "decision"
+   },
+   {
+    "id": "W",
+    "label": "¿Termina en wait? (MCP siempre espera)",
+    "tipo": "decision"
+   },
+   {
+    "id": "P",
+    "label": "202 + status_url polling o callback",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "JS",
+    "label": "¿Estado del job?",
+    "tipo": "decision"
+   },
+   {
+    "id": "SRC",
+    "label": "¿Fuente disponible?",
+    "tipo": "decision"
+   },
+   {
+    "id": "RES",
+    "label": "¿Hay coincidencia?",
+    "tipo": "decision"
+   },
+   {
+    "id": "OK",
+    "label": "200 { data }",
+    "tipo": "io"
+   },
+   {
+    "id": "NF",
+    "label": "200 found:false o lista vacía",
+    "tipo": "io"
+   },
+   {
+    "id": "HIT",
+    "label": "200 · X-Cache: HIT 0 créditos",
+    "tipo": "io"
+   },
+   {
+    "id": "E4",
+    "label": "400 invalid_param · 401 402 plan_limit · 429",
+    "tipo": "io"
+   },
+   {
+    "id": "E5",
+    "label": "5xx upstream_error · job_failed · expired",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: respuesta útil",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: error tipado",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R01",
+    "tipo": "api",
+    "detalle": "Llave de organización (Bearer croma_live_… u OAuth MCP)",
+    "criticidad": "ALTA",
+    "riesgo": "Da acceso total a la organización; rotar si se filtra",
+    "nodos": [
+     "V"
+    ],
+    "remite": "Consola de Croma (emitir o rotar llaves)"
+   },
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "V"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "DSQ"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "SRC"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "ASY",
+     "W",
+     "P",
+     "JS"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R06",
+    "tipo": "storage",
+    "detalle": "Caché de resultados recientes (X-Cache: HIT)",
+    "criticidad": "BAJA",
+    "riesgo": "Sin costo, pero cuenta para topes horarios",
+    "nodos": [
+     "CH",
+     "HIT"
+    ],
+    "remite": "Fuente oficial cuando la copia expira"
+   },
+   {
+    "id": "R07",
+    "tipo": "storage",
+    "detalle": "Almacén de lookups (served_from copy/upstream/stale)",
+    "criticidad": "MEDIA",
+    "riesgo": "Ventana de frescura por fuente (p. ej. IGAC 30 días)",
+    "nodos": [
+     "LKQ"
+    ],
+    "remite": "Fuente oficial al vencer la ventana"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "W"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "S",
+     "RES"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R15",
+    "tipo": "dato",
+    "detalle": "Catálogo y OpenAPI (/catalog, /openapi)",
+    "criticidad": "BAJA",
+    "riesgo": "Fuente de verdad de rutas y esquemas",
+    "nodos": [
+     "V",
+     "M"
+    ],
+    "remite": "OpenAPI y /catalog"
+   },
+   {
+    "id": "R16",
+    "tipo": "api",
+    "detalle": "Webhook del cliente (callback_url HTTPS + HMAC)",
+    "criticidad": "MEDIA",
+    "riesgo": "Solo hosts públicos; responder 2xx rápido",
+    "nodos": [
+     "P"
+    ],
+    "remite": "Endpoint del cliente con firma HMAC"
+   }
+  ],
+  "validacion": {
+   "clave": "D01",
+   "titulo": "Ciclo de vida de una solicitud",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "datos_almacen",
+     "decision",
+     "error_fallback"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "datos_almacen": {
+     "fondo": "#56B4E9",
+     "texto": "#000000",
+     "ratio": 9.1,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "servicio_externo": {
+     "fondo": "#8C6D31",
+     "texto": "#FFFFFF",
+     "ratio": 4.83,
+     "pasa": true
+    }
+   },
+   "rutas_error": 3,
+   "n_nodos": 19,
+   "n_aristas": 28,
+   "n_decisiones": 9,
+   "es_dag": false,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     false
+    ],
+    "ancho_in": 10.93,
+    "alto_in": 13.89,
+    "letra_efectiva_pt": 5.9
+   }
+  }
+ },
+ {
+  "clave": "D02",
+  "titulo": "Rama Judicial: procesos, lotes y correos",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Resolver procesos judiciales por parte, por radicado o en lote, y ubicar el correo oficial del despacho.",
+  "es_dag": true,
+  "categorias": [
+   "Datos / almacén",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Fuente oficial externa",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Procesos de una parte o seguimiento de casos",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Qué identificador?",
+    "tipo": "decision"
+   },
+   {
+    "id": "BE",
+    "label": "cases_by_entity nombre · active_only",
+    "tipo": "proceso"
+   },
+   {
+    "id": "BR",
+    "label": "cases_by_radicado 20 a 25 dígitos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "BB",
+    "label": "cases_by_radicado_batch 1 a 50 ítems",
+    "tipo": "proceso"
+   },
+   {
+    "id": "EM",
+    "label": "emails_by_court 12 dígitos o radicado",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Demasiadas coincidencias?",
+    "tipo": "decision"
+   },
+   {
+    "id": "LC",
+    "label": "Casos: radicado, despacho, partes",
+    "tipo": "io"
+   },
+   {
+    "id": "VB",
+    "label": "¿Ítems bien formados?",
+    "tipo": "decision"
+   },
+   {
+    "id": "SRC",
+    "label": "Consulta Judicial en vivo · 10 créditos",
+    "tipo": "externo"
+   },
+   {
+    "id": "DIR",
+    "label": "Directorio de correos dataset semanal",
+    "tipo": "datos"
+   },
+   {
+    "id": "D3",
+    "label": "¿found?",
+    "tipo": "decision"
+   },
+   {
+    "id": "ACT",
+    "label": "Metadatos + 40 actuaciones",
+    "tipo": "io"
+   },
+   {
+    "id": "NF",
+    "label": "found:false private_only",
+    "tipo": "io"
+   },
+   {
+    "id": "MB",
+    "label": "Buzón del despacho y áreas",
+    "tipo": "io"
+   },
+   {
+    "id": "E1",
+    "label": "too_many_results: nombre exacto",
+    "tipo": "io"
+   },
+   {
+    "id": "E2",
+    "label": "400 items.N nada se ejecuta",
+    "tipo": "io"
+   },
+   {
+    "id": "E3",
+    "label": "5xx upstream_error",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: expediente actualizado",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: refinar o reintentar",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "SRC"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "DIR"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "SRC"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R06",
+    "tipo": "storage",
+    "detalle": "Caché de resultados recientes (X-Cache: HIT)",
+    "criticidad": "BAJA",
+    "riesgo": "Sin costo, pero cuenta para topes horarios",
+    "nodos": [
+     "BB"
+    ],
+    "remite": "Fuente oficial cuando la copia expira"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "D1",
+     "BE",
+     "BR",
+     "BB",
+     "EM"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   },
+   {
+    "id": "R15",
+    "tipo": "dato",
+    "detalle": "Catálogo y OpenAPI (/catalog, /openapi)",
+    "criticidad": "BAJA",
+    "riesgo": "Fuente de verdad de rutas y esquemas",
+    "nodos": [
+     "VB"
+    ],
+    "remite": "OpenAPI y /catalog"
+   }
+  ],
+  "validacion": {
+   "clave": "D02",
+   "titulo": "Rama Judicial: procesos, lotes y correos",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "datos_almacen",
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "datos_almacen": {
+     "fondo": "#56B4E9",
+     "texto": "#000000",
+     "ratio": 9.1,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    },
+    "servicio_externo": {
+     "fondo": "#8C6D31",
+     "texto": "#FFFFFF",
+     "ratio": 4.83,
+     "pasa": true
+    }
+   },
+   "rutas_error": 3,
+   "n_nodos": 20,
+   "n_aristas": 25,
+   "n_decisiones": 4,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     3,
+     false
+    ],
+    "ancho_in": 8.76,
+    "alto_in": 11.01,
+    "letra_efectiva_pt": 7.3
+   }
+  }
+ },
+ {
+  "clave": "D03",
+  "titulo": "Jurisprudencia de altas cortes y disciplina judicial",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Encontrar y leer completas las providencias de las cuatro corporaciones cubiertas, eligiendo el corpus correcto según la fecha.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Pregunta jurisprudencial",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Corporación?",
+    "tipo": "decision"
+   },
+   {
+    "id": "CC",
+    "label": "corte_constitucional_ rulings_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CS",
+    "label": "corte_suprema_ rulings_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Antes de dic-2021?",
+    "tipo": "decision"
+   },
+   {
+    "id": "CE",
+    "label": "consejo_estado_search asíncrono",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SM",
+    "label": "samai_rulings_search headnotes · tesis",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CN",
+    "label": "cndj_rulings_search en vivo",
+    "tipo": "proceso"
+   },
+   {
+    "id": "F",
+    "label": "Acotar: tipo, año, fechas, ponente",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D3",
+    "label": "¿Texto completo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "DET",
+    "label": "Detalle de la providencia",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PAG",
+    "label": "Leer por rangos offset · limit",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "RS",
+    "label": "Número, fecha, ponente, decisión, enlace",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "5xx · job_failed · texto sin paginar",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: cita verificable",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: reintentar o acotar",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "CC",
+     "CS",
+     "SM"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "CE",
+     "CN"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "CE"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R08",
+    "tipo": "storage",
+    "detalle": "Copia documental en blob de Croma (PDF, DOCX, XLSX)",
+    "criticidad": "MEDIA",
+    "riesgo": "Enlaces de terceros; conservar source_url",
+    "nodos": [
+     "DET"
+    ],
+    "remite": "source_document_url de la entidad"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "F",
+     "E"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "PAG"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D03",
+   "titulo": "Jurisprudencia de altas cortes y disciplina judicial",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 16,
+   "n_aristas": 20,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 8.44,
+    "alto_in": 11.51,
+    "letra_efectiva_pt": 7.3
+   }
+  }
+ },
+ {
+  "clave": "D04",
+  "titulo": "Empresas: RUES, Supersociedades, SIMEV y DIAN",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Construir una ficha de conocimiento de la empresa (KYB) con registro mercantil, finanzas, socios y comercio exterior.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Contraparte empresarial",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Tienes NIT?",
+    "tipo": "decision"
+   },
+   {
+    "id": "RN",
+    "label": "rues_entities_by_name · secop_suppliers_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RU",
+    "label": "rues_entity_by_nit en vivo",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿found?",
+    "tipo": "decision"
+   },
+   {
+    "id": "D3",
+    "label": "¿Reporta a Supersociedades?",
+    "tipo": "decision"
+   },
+   {
+    "id": "SS",
+    "label": "company · financial_ statements · filing_statements",
+    "tipo": "proceso"
+   },
+   {
+    "id": "OW",
+    "label": "filing_ownership · ownership_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D4",
+    "label": "¿Emisor de valores?",
+    "tipo": "decision"
+   },
+   {
+    "id": "SV",
+    "label": "simev_shareholders cortes jun · dic",
+    "tipo": "proceso"
+   },
+   {
+    "id": "TR",
+    "label": "dian_trade_profile 2017 en adelante",
+    "tipo": "proceso"
+   },
+   {
+    "id": "QC",
+    "label": "Control de calidad outliers · nulos · DV",
+    "tipo": "proceso"
+   },
+   {
+    "id": "GR",
+    "label": "Ficha KYB + grafo de vinculados",
+    "tipo": "io"
+   },
+   {
+    "id": "NF",
+    "label": "found:false: verificar NIT y DV",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "Dataset no disponible → reintentar",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: decisión de vinculación",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: corregir o reintentar",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "RN",
+     "SS",
+     "OW",
+     "SV",
+     "TR"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "RN",
+     "RU"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "QC"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "D1",
+     "RU"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   }
+  ],
+  "validacion": {
+   "clave": "D04",
+   "titulo": "Empresas: RUES, Supersociedades, SIMEV y DIAN",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 17,
+   "n_aristas": 20,
+   "n_decisiones": 4,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "natural",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 10.21,
+    "alto_in": 10.4,
+    "letra_efectiva_pt": 6.3
+   }
+  }
+ },
+ {
+  "clave": "D05",
+  "titulo": "Supersociedades: insolvencia, Baranda y Relatoría",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Seguir procesos de insolvencia y litigios mercantiles combinando lo reportado anualmente con lo notificado a diario.",
+  "es_dag": true,
+  "categorias": [
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Insolvencia o litigio societario",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Qué necesitas?",
+    "tipo": "decision"
+   },
+   {
+    "id": "INS",
+    "label": "insolvency_ processes_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "BAR",
+    "label": "baranda_*_search estados · autos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CF",
+    "label": "baranda_ company_file (vivo)",
+    "tipo": "proceso"
+   },
+   {
+    "id": "REL",
+    "label": "relatoria_ documents_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Disponible?",
+    "tipo": "decision"
+   },
+   {
+    "id": "RP",
+    "label": "Tipo, etapa, admisión, cierre",
+    "tipo": "io"
+   },
+   {
+    "id": "DD",
+    "label": "baranda_decision texto del auto",
+    "tipo": "io"
+   },
+   {
+    "id": "PV",
+    "label": "Providencias y entradas (10/pág.)",
+    "tipo": "io"
+   },
+   {
+    "id": "DOC",
+    "label": "relatoria_document problemas jurídicos",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "temporarily unavailable (T17)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: seguimiento documentado",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: usar Baranda o reintentar",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "INS",
+     "BAR",
+     "REL"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "CF"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "CF"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R08",
+    "tipo": "storage",
+    "detalle": "Copia documental en blob de Croma (PDF, DOCX, XLSX)",
+    "criticidad": "MEDIA",
+    "riesgo": "Enlaces de terceros; conservar source_url",
+    "nodos": [
+     "BAR",
+     "DD"
+    ],
+    "remite": "source_document_url de la entidad"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "D1"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "DOC"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D05",
+   "titulo": "Supersociedades: insolvencia, Baranda y Relatoría",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 14,
+   "n_aristas": 17,
+   "n_decisiones": 2,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     true,
+     3,
+     true
+    ],
+    "ancho_in": 10.53,
+    "alto_in": 9.61,
+    "letra_efectiva_pt": 6.1
+   }
+  }
+ },
+ {
+  "clave": "D06",
+  "titulo": "Contratación pública: SECOP I y II y ANCP-CCE",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Responder qué ha contratado una persona o entidad con el Estado y con qué riesgos, desde los 16 endpoints de SECOP.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Contratista, entidad, objeto o id SECOP",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Punto de partida?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PF",
+    "label": "secop_profile 1 llamada",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PR",
+    "label": "secop_processes_ search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Formato del id?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PA",
+    "label": "secop_plans_search Plan Anual",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CC",
+    "label": "ancp_cce_conceptos_ search → concepto",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RC",
+    "label": "*_record milisegundos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "LV",
+    "label": "secop_process · secop_contract",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D3",
+    "label": "¿found?",
+    "tipo": "decision"
+   },
+   {
+    "id": "DP",
+    "label": "contracts · awards · bidders · sanctions",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "QC",
+    "label": "Control de calidad DV · pruebas · outliers",
+    "tipo": "proceso"
+   },
+   {
+    "id": "OUT",
+    "label": "Perfil de riesgo o inteligencia de mercado",
+    "tipo": "io"
+   },
+   {
+    "id": "FB",
+    "label": "Vista viva sin el registro (T44)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: hallazgo trazable",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "PF",
+     "PR",
+     "PA",
+     "RC",
+     "DP"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "CC",
+     "LV"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "QC"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "D1",
+     "D2"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   }
+  ],
+  "validacion": {
+   "clave": "D06",
+   "titulo": "Contratación pública: SECOP I y II y ANCP-CCE",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 15,
+   "n_aristas": 20,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "natural",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 8.49,
+    "alto_in": 10.31,
+    "letra_efectiva_pt": 7.5
+   }
+  }
+ },
+ {
+  "clave": "D07",
+  "titulo": "Verificación de personas naturales",
+  "tipo_diagrama": "Flujo de algoritmo con compuerta legal",
+  "objetivo": "Verificar a una persona solo cuando existe finalidad y base legal, y dejar evidencia de cada veredicto.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Verificación de una persona",
+    "tipo": "terminador"
+   },
+   {
+    "id": "L",
+    "label": "¿Finalidad y base legal?",
+    "tipo": "decision"
+   },
+   {
+    "id": "T",
+    "label": "¿Qué exige la finalidad?",
+    "tipo": "decision"
+   },
+   {
+    "id": "RG",
+    "label": "registraduria_ vital_status",
+    "tipo": "proceso"
+   },
+   {
+    "id": "AN",
+    "label": "policía · procuraduría contraloría · contaduría",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SG",
+    "label": "adres · ruaf (fecha expedición)",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SO",
+    "label": "dnp_social_ classification",
+    "tipo": "proceso"
+   },
+   {
+    "id": "IP",
+    "label": "sicaac · fiscalia_case (21 dígitos)",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RC",
+    "label": "registro_civil_ birth_record",
+    "tipo": "proceso"
+   },
+   {
+    "id": "J",
+    "label": "Trabajos asíncronos MCP espera en línea",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "V",
+    "label": "¿Resultado?",
+    "tipo": "decision"
+   },
+   {
+    "id": "NF",
+    "label": "found:false definitivo",
+    "tipo": "io"
+   },
+   {
+    "id": "VR",
+    "label": "Veredicto + frase textual + fecha",
+    "tipo": "io"
+   },
+   {
+    "id": "EX",
+    "label": "Expediente con minimización",
+    "tipo": "proceso"
+   },
+   {
+    "id": "NO",
+    "label": "No consultar: sin base legal",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "5xx · RUAF: issue_date_matches",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: decisión documentada",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: abstención o reintento",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "J"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "RG",
+     "AN",
+     "SG",
+     "SO",
+     "IP",
+     "RC"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "AN",
+     "SG",
+     "IP",
+     "J"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "L",
+     "EX"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   }
+  ],
+  "validacion": {
+   "clave": "D07",
+   "titulo": "Verificación de personas naturales",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 18,
+   "n_aristas": 24,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     3,
+     true
+    ],
+    "ancho_in": 8.49,
+    "alto_in": 11.78,
+    "letra_efectiva_pt": 7.1
+   }
+  }
+ },
+ {
+  "clave": "D08",
+  "titulo": "Vehículos y tránsito: RUNT y SIMIT",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Resolver la situación jurídica, técnica y de multas de un vehículo o de un conductor.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Placa (y documento del propietario)",
+    "tipo": "terminador"
+   },
+   {
+    "id": "L",
+    "label": "¿Base legal para el titular?",
+    "tipo": "decision"
+   },
+   {
+    "id": "D1",
+    "label": "¿Qué necesitas?",
+    "tipo": "decision"
+   },
+   {
+    "id": "VP",
+    "label": "runt_vehicle_by_plate placa + documento",
+    "tipo": "proceso"
+   },
+   {
+    "id": "VH",
+    "label": "runt_vehicle_history_ by_plate",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CD",
+    "label": "runt_citizen_by_ document",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CP",
+    "label": "runt_citizen_by_ plate",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SI",
+    "label": "simit_account_status placa o documento",
+    "tipo": "proceso"
+   },
+   {
+    "id": "J",
+    "label": "Trabajo asíncrono en vivo · 10 créditos",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "V",
+    "label": "¿found?",
+    "tipo": "decision"
+   },
+   {
+    "id": "NF",
+    "label": "found:false",
+    "tipo": "io"
+   },
+   {
+    "id": "BE",
+    "label": "SOAT · RTM · prendas blindaje · multas",
+    "tipo": "io"
+   },
+   {
+    "id": "OUT",
+    "label": "Suscripción, crédito o cobranza",
+    "tipo": "proceso"
+   },
+   {
+    "id": "NO",
+    "label": "No consultar datos personales",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "5xx upstream_error",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: decisión vehicular",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: abstención o reintento",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "J"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "VP",
+     "VH",
+     "CD",
+     "CP",
+     "SI"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "J"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "L"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   }
+  ],
+  "validacion": {
+   "clave": "D08",
+   "titulo": "Vehículos y tránsito: RUNT y SIMIT",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 17,
+   "n_aristas": 22,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 8.61,
+    "alto_in": 11.78,
+    "letra_efectiva_pt": 7.1
+   }
+  }
+ },
+ {
+  "clave": "D09",
+  "titulo": "Fuentes con sesión del titular y factura electrónica",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Acceder a información que solo existe tras iniciar sesión, sin que las credenciales pasen por la conversación.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta",
+   "Recurso de infraestructura"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Registros propios o validar una factura",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Requiere sesión?",
+    "tipo": "decision"
+   },
+   {
+    "id": "FE",
+    "label": "dian_electronic_document CUFE + NIT · caché 24 h",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PD",
+    "label": "¿PDF protegido?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PW",
+    "label": "Sugerir contraseñas (NIT emisor sin DV…)",
+    "tipo": "io"
+   },
+   {
+    "id": "C",
+    "label": "¿Conexión activa?",
+    "tipo": "decision"
+   },
+   {
+    "id": "CON",
+    "label": "*_connect: enlace seguro · máx. 5",
+    "tipo": "proceso"
+   },
+   {
+    "id": "Q",
+    "label": "Facturas · exógena cuentas · movimientos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "QC",
+    "label": "¿Conexión utilizable?",
+    "tipo": "decision"
+   },
+   {
+    "id": "J",
+    "label": "Trabajo asíncrono no compartido",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "OUT",
+    "label": "Datos del titular año cerrado",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "409 · 422 · 429 connections_*",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: información del titular",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: reconectar o esperar cupo",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R01",
+    "tipo": "api",
+    "detalle": "Llave de organización (Bearer croma_live_… u OAuth MCP)",
+    "criticidad": "ALTA",
+    "riesgo": "Da acceso total a la organización; rotar si se filtra",
+    "nodos": [
+     "CON"
+    ],
+    "remite": "Consola de Croma (emitir o rotar llaves)"
+   },
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "Q"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "FE",
+     "Q"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "J"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R06",
+    "tipo": "storage",
+    "detalle": "Caché de resultados recientes (X-Cache: HIT)",
+    "criticidad": "BAJA",
+    "riesgo": "Sin costo, pero cuenta para topes horarios",
+    "nodos": [
+     "FE"
+    ],
+    "remite": "Fuente oficial cuando la copia expira"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "FE"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R11",
+    "tipo": "humano",
+    "detalle": "Base legal y finalidad (Ley 1581 de 2012)",
+    "criticidad": "ALTA",
+    "riesgo": "Responsabilidad del usuario, no de Croma",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Responsable del tratamiento (usuario)"
+   },
+   {
+    "id": "R12",
+    "tipo": "servicio",
+    "detalle": "Conexión cifrada del titular (DIAN, Bancolombia)",
+    "criticidad": "ALTA",
+    "riesgo": "Máx. 5 por fuente; cupo diario de inicios de sesión",
+    "nodos": [
+     "C",
+     "CON",
+     "QC"
+    ],
+    "remite": "Consola: *_connect / *_delete_connection"
+   }
+  ],
+  "validacion": {
+   "clave": "D09",
+   "titulo": "Fuentes con sesión del titular y factura electrónica",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    },
+    "recurso_infra": {
+     "fondo": "#117733",
+     "texto": "#FFFFFF",
+     "ratio": 5.66,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 14,
+   "n_aristas": 16,
+   "n_decisiones": 4,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 8.47,
+    "alto_in": 10.51,
+    "letra_efectiva_pt": 7.6
+   }
+  }
+ },
+ {
+  "clave": "D10",
+  "titulo": "Normativa y regulación",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Localizar la norma correcta, leerla completa y reconstruir sus modificaciones.",
+  "es_dag": false,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Pregunta normativa o vigilancia",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Tipo de norma?",
+    "tipo": "decision"
+   },
+   {
+    "id": "FP",
+    "label": "funcion_publica_ norms_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "IM",
+    "label": "imprenta_gaceta_ documents_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "DO",
+    "label": "imprenta_diarios_ search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SF",
+    "label": "superfinanciera_ regulations · doctrine",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CR",
+    "label": "creg_acts_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "DI",
+    "label": "dian_doctrina_search en vivo",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SC",
+    "label": "sic_normativa_ regulations · bulletins",
+    "tipo": "proceso"
+   },
+   {
+    "id": "F",
+    "label": "Acotar: tipo, número, año, fechas, entidad",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D3",
+    "label": "¿capped o excesivo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "D2",
+    "label": "¿Texto completo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PG",
+    "label": "Leer por rangos (> 1 M caracteres)",
+    "tipo": "subproceso"
+   },
+   {
+    "id": "G",
+    "label": "Grafo normativo: amendments · norm_id",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "Afinar consulta (too_many · capped)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: norma vigente con fuente",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "FP",
+     "IM",
+     "DO",
+     "SF",
+     "CR",
+     "SC"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "DI"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R08",
+    "tipo": "storage",
+    "detalle": "Copia documental en blob de Croma (PDF, DOCX, XLSX)",
+    "criticidad": "MEDIA",
+    "riesgo": "Enlaces de terceros; conservar source_url",
+    "nodos": [
+     "CR",
+     "SC"
+    ],
+    "remite": "source_document_url de la entidad"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "F"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "PG"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D10",
+   "titulo": "Normativa y regulación",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 16,
+   "n_aristas": 23,
+   "n_decisiones": 3,
+   "es_dag": false,
+   "layout": {
+    "estrategia": [
+     "natural",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 7.71,
+    "alto_in": 11.64,
+    "letra_efectiva_pt": 7.2
+   }
+  }
+ },
+ {
+  "clave": "D11",
+  "titulo": "Superintendencia de Industria y Comercio",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Cubrir propiedad industrial, protección al consumidor y seguimiento de radicados ante la SIC.",
+  "es_dag": true,
+  "categorias": [
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Asunto ante la SIC",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Qué buscas?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PI",
+    "label": "sic_ip_*_search → marca · patente · diseño",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PO",
+    "label": "sic_ip_trademarks_ by_owner (vivo)",
+    "tipo": "proceso"
+   },
+   {
+    "id": "GZ",
+    "label": "sic_gazette_entries_ search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SA",
+    "label": "sic_sanctions_ sanctions_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "AC",
+    "label": "sic_actos_acts_search → sic_actos_act",
+    "tipo": "proceso"
+   },
+   {
+    "id": "TR",
+    "label": "sic_tramites_case año · número · parte",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Resultados?",
+    "tipo": "decision"
+   },
+   {
+    "id": "D3",
+    "label": "¿Documento de una parte?",
+    "tipo": "decision"
+   },
+   {
+    "id": "DOCS",
+    "label": "Actuaciones, actos y documentos",
+    "tipo": "io"
+   },
+   {
+    "id": "OUT",
+    "label": "Vigilancia marcaria o debida diligencia",
+    "tipo": "io"
+   },
+   {
+    "id": "NF",
+    "label": "found:false: inexistente o no-parte",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "0 resultados: simplificar la consulta (T43)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: decisión de PI o cumplimiento",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: verificar o simplificar",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "PI",
+     "GZ",
+     "SA",
+     "AC"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "PO",
+     "TR"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R05",
+    "tipo": "compute",
+    "detalle": "Cola de trabajos asíncronos (/jobs, espera ≤55 s)",
+    "criticidad": "MEDIA",
+    "riesgo": "202 + status_url fuera de MCP",
+    "nodos": [
+     "TR"
+    ],
+    "remite": "GET /jobs/:id o callback_url"
+   },
+   {
+    "id": "R07",
+    "tipo": "storage",
+    "detalle": "Almacén de lookups (served_from copy/upstream/stale)",
+    "criticidad": "MEDIA",
+    "riesgo": "Ventana de frescura por fuente (p. ej. IGAC 30 días)",
+    "nodos": [
+     "PI"
+    ],
+    "remite": "Fuente oficial al vencer la ventana"
+   },
+   {
+    "id": "R08",
+    "tipo": "storage",
+    "detalle": "Copia documental en blob de Croma (PDF, DOCX, XLSX)",
+    "criticidad": "MEDIA",
+    "riesgo": "Enlaces de terceros; conservar source_url",
+    "nodos": [
+     "GZ",
+     "AC",
+     "DOCS"
+    ],
+    "remite": "source_document_url de la entidad"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "PO",
+     "TR"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   }
+  ],
+  "validacion": {
+   "clave": "D11",
+   "titulo": "Superintendencia de Industria y Comercio",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 16,
+   "n_aristas": 21,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "natural",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 9.44,
+    "alto_in": 9.51,
+    "letra_efectiva_pt": 6.8
+   }
+  }
+ },
+ {
+  "clave": "D12",
+  "titulo": "Catastro nacional del IGAC",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Obtener el avalúo y la geometría de un predio y entender el valor del suelo que lo rodea.",
+  "es_dag": true,
+  "categorias": [
+   "Datos / almacén",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Ubicación, dirección o número predial",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Catastro del IGAC?",
+    "tipo": "decision"
+   },
+   {
+    "id": "D2",
+    "label": "¿Qué tienes?",
+    "tipo": "decision"
+   },
+   {
+    "id": "PT",
+    "label": "igac_property_by_point lat · lon WGS84",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PS",
+    "label": "igac_properties_search municipio · manzana",
+    "tipo": "proceso"
+   },
+   {
+    "id": "PR",
+    "label": "igac_property lookup 30 días",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D3",
+    "label": "¿Hay predio en el punto?",
+    "tipo": "decision"
+   },
+   {
+    "id": "AV",
+    "label": "Avalúo, áreas, destino, polígono GeoJSON",
+    "tipo": "io"
+   },
+   {
+    "id": "ZN",
+    "label": "economic_zones · physical_zones · parcel",
+    "tipo": "proceso"
+   },
+   {
+    "id": "ST",
+    "label": "igac_municipal_ statistics",
+    "tipo": "proceso"
+   },
+   {
+    "id": "NF",
+    "label": "found:false espacio público",
+    "tipo": "io"
+   },
+   {
+    "id": "NO",
+    "label": "Gestor catastral propio (5 territorios)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: avalúo con contexto",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: consultar al gestor",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "PS",
+     "ZN",
+     "ST"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "PR"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R07",
+    "tipo": "storage",
+    "detalle": "Almacén de lookups (served_from copy/upstream/stale)",
+    "criticidad": "MEDIA",
+    "riesgo": "Ventana de frescura por fuente (p. ej. IGAC 30 días)",
+    "nodos": [
+     "PT",
+     "PR"
+    ],
+    "remite": "Fuente oficial al vencer la ventana"
+   },
+   {
+    "id": "R10",
+    "tipo": "dato",
+    "detalle": "Identificador del sujeto (NIT, radicado, placa, cédula, CUFE)",
+    "criticidad": "ALTA",
+    "riesgo": "Validación por expresión regular antes de cobrar",
+    "nodos": [
+     "S"
+    ],
+    "remite": "Validación de formato (400 / −32602)"
+   },
+   {
+    "id": "R18",
+    "tipo": "dato",
+    "detalle": "Códigos DIVIPOLA / DANE (2 o 5 dígitos)",
+    "criticidad": "BAJA",
+    "riesgo": "Normalizan territorio entre fuentes",
+    "nodos": [
+     "D1",
+     "PS"
+    ],
+    "remite": "Codificación DIVIPOLA del DANE"
+   }
+  ],
+  "validacion": {
+   "clave": "D12",
+   "titulo": "Catastro nacional del IGAC",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "datos_almacen",
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "datos_almacen": {
+     "fondo": "#56B4E9",
+     "texto": "#000000",
+     "ratio": 9.1,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 14,
+   "n_aristas": 16,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     true,
+     4,
+     true
+    ],
+    "ancho_in": 8.31,
+    "alto_in": 10.75,
+    "letra_efectiva_pt": 7.7
+   }
+  }
+ },
+ {
+  "clave": "D13",
+  "titulo": "Estadística oficial: DANE, BanRep, DNP, ICFES, MinEducación",
+  "tipo_diagrama": "Pipeline (DAG)",
+  "objetivo": "Combinar series oficiales en un mismo eje territorial y temporal sin perder la fecha de corte.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Pregunta socio o macroeconómica",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Ámbito?",
+    "tipo": "decision"
+   },
+   {
+    "id": "BR",
+    "label": "banrep_series_search → banrep_series",
+    "tipo": "proceso"
+   },
+   {
+    "id": "BI",
+    "label": "banrep_research_ publications_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "DN",
+    "label": "dane_poverty · labour_ market · ipm · census",
+    "tipo": "proceso"
+   },
+   {
+    "id": "TD",
+    "label": "terridata_indicators → series · ranking",
+    "tipo": "proceso"
+   },
+   {
+    "id": "ED",
+    "label": "icfes_saber11_* · mineducacion",
+    "tipo": "proceso"
+   },
+   {
+    "id": "DV",
+    "label": "Normalizar territorio DIVIPOLA 2 o 5 dígitos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "AS",
+    "label": "¿as_of y periodicidad?",
+    "tipo": "decision"
+   },
+   {
+    "id": "OUT",
+    "label": "Tablero o modelo territorial con fuente",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "Advertir rezago o serie descontinuada",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: indicador trazable",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "BR",
+     "BI",
+     "DN",
+     "TD",
+     "ED",
+     "AS"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R18",
+    "tipo": "dato",
+    "detalle": "Códigos DIVIPOLA / DANE (2 o 5 dígitos)",
+    "criticidad": "BAJA",
+    "riesgo": "Normalizan territorio entre fuentes",
+    "nodos": [
+     "DV"
+    ],
+    "remite": "Codificación DIVIPOLA del DANE"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "BI"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D13",
+   "titulo": "Estadística oficial: DANE, BanRep, DNP, ICFES, MinEducación",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 12,
+   "n_aristas": 16,
+   "n_decisiones": 2,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "natural",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 7.47,
+    "alto_in": 10.6,
+    "letra_efectiva_pt": 7.9
+   }
+  }
+ },
+ {
+  "clave": "D14",
+  "titulo": "Fuentes sectoriales: INVIMA, ANM y SIATA",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Verificar habilitaciones sanitarias, notificaciones mineras y condiciones ambientales en tiempo real.",
+  "es_dag": true,
+  "categorias": [
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Verificación sectorial",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Sector?",
+    "tipo": "decision"
+   },
+   {
+    "id": "IN",
+    "label": "invima_registrations · medicines (CUM, ATC)",
+    "tipo": "proceso"
+   },
+   {
+    "id": "AN",
+    "label": "anm_notices_search → anm_notice",
+    "tipo": "proceso"
+   },
+   {
+    "id": "SI",
+    "label": "siata_geoportal_* aire · lluvia · ríos",
+    "tipo": "proceso"
+   },
+   {
+    "id": "IV",
+    "label": "¿Vigente y CUM activo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "QS",
+    "label": "¿Valor −999?",
+    "tipo": "decision"
+   },
+   {
+    "id": "OKV",
+    "label": "Producto habilitado",
+    "tipo": "io"
+   },
+   {
+    "id": "NOT",
+    "label": "Estados, avisos y edictos",
+    "tipo": "io"
+   },
+   {
+    "id": "AMB",
+    "label": "Lectura válida con ICA",
+    "tipo": "io"
+   },
+   {
+    "id": "AL",
+    "label": "Alerta: vencido o inactivo",
+    "tipo": "io"
+   },
+   {
+    "id": "DS",
+    "label": "Descartar lectura inválida",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: verificación sectorial",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "IN",
+     "AN"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "SI"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R08",
+    "tipo": "storage",
+    "detalle": "Copia documental en blob de Croma (PDF, DOCX, XLSX)",
+    "criticidad": "MEDIA",
+    "riesgo": "Enlaces de terceros; conservar source_url",
+    "nodos": [
+     "AN"
+    ],
+    "remite": "source_document_url de la entidad"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "AN"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D14",
+   "titulo": "Fuentes sectoriales: INVIMA, ANM y SIATA",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 2,
+   "n_nodos": 13,
+   "n_aristas": 16,
+   "n_decisiones": 3,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 9.21,
+    "alto_in": 7.36,
+    "letra_efectiva_pt": 7.0
+   }
+  }
+ },
+ {
+  "clave": "D15",
+  "titulo": "Trámites del Estado y herramientas web",
+  "tipo_diagrama": "Flujo de algoritmo",
+  "objetivo": "Responder preguntas ciudadanas sobre trámites con la ficha oficial y, si hace falta, con extracción web.",
+  "es_dag": true,
+  "categorias": [
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Modelo de IA / agente",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "Duda sobre un trámite o una página pública",
+    "tipo": "terminador"
+   },
+   {
+    "id": "D1",
+    "label": "¿Dónde está la información?",
+    "tipo": "decision"
+   },
+   {
+    "id": "SU",
+    "label": "suit_procedures_search → suit_procedure",
+    "tipo": "proceso"
+   },
+   {
+    "id": "GP",
+    "label": "gov_pages_search → gov_pages_page",
+    "tipo": "proceso"
+   },
+   {
+    "id": "X",
+    "label": "extract_* · generate_json",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RS",
+    "label": "research · web_search",
+    "tipo": "proceso"
+   },
+   {
+    "id": "D2",
+    "label": "¿Página extraíble?",
+    "tipo": "decision"
+   },
+   {
+    "id": "OUT",
+    "label": "Respuesta ciudadana con enlace oficial",
+    "tipo": "io"
+   },
+   {
+    "id": "E",
+    "label": "Internal error (gov.co, T52)",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: orientación verificable",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "SU",
+     "GP"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "X"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "RS"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R17",
+    "tipo": "dato",
+    "detalle": "Esquema JSON del usuario (extract / generate)",
+    "criticidad": "MEDIA",
+    "riesgo": "No admite uniones de tipo (observado)",
+    "nodos": [
+     "X"
+    ],
+    "remite": "Esquema simple, sin uniones de tipo"
+   },
+   {
+    "id": "R19",
+    "tipo": "dato",
+    "detalle": "Texto largo paginado (offset, limit, next_offset)",
+    "criticidad": "MEDIA",
+    "riesgo": "Normas y sentencias >300.000 caracteres",
+    "nodos": [
+     "SU",
+     "GP"
+    ],
+    "remite": "Siguiente rango con next_offset"
+   }
+  ],
+  "validacion": {
+   "clave": "D15",
+   "titulo": "Trámites del Estado y herramientas web",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "modelo_ia",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "modelo_ia": {
+     "fondo": "#CC79A7",
+     "texto": "#000000",
+     "ratio": 6.86,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 1,
+   "n_nodos": 10,
+   "n_aristas": 13,
+   "n_decisiones": 2,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "natural",
+     true,
+     4,
+     true
+    ],
+    "ancho_in": 7.17,
+    "alto_in": 7.62,
+    "letra_efectiva_pt": 8.9
+   }
+  }
+ },
+ {
+  "clave": "D16",
+  "titulo": "Monitores: alertas programadas por correo",
+  "tipo_diagrama": "Máquina de estados / flujo",
+  "objetivo": "Convertir una consulta en una vigilancia programada que avisa por correo solo lo nuevo.",
+  "es_dag": true,
+  "categorias": [
+   "Control / orquestación",
+   "Decisión",
+   "Entrada / salida",
+   "Error / contingencia",
+   "Modelo de IA / agente",
+   "Proceso / herramienta"
+  ],
+  "nodos": [
+   {
+    "id": "S",
+    "label": "«Avísame cuando…»",
+    "tipo": "terminador"
+   },
+   {
+    "id": "EN",
+    "label": "¿Monitores habilitados?",
+    "tipo": "decision"
+   },
+   {
+    "id": "Q",
+    "label": "El agente ejecuta la búsqueda",
+    "tipo": "proceso"
+   },
+   {
+    "id": "R",
+    "label": "¿Hay destinatarios?",
+    "tipo": "decision"
+   },
+   {
+    "id": "ASK",
+    "label": "Preguntar correos (máx. 3, no adivinar)",
+    "tipo": "io"
+   },
+   {
+    "id": "CR",
+    "label": "create_monitor endpoint + query",
+    "tipo": "proceso"
+   },
+   {
+    "id": "CA",
+    "label": "¿Dataset o vivo?",
+    "tipo": "decision"
+   },
+   {
+    "id": "FR",
+    "label": "Primera ejecución ≤500 filas + bienvenida",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RU",
+    "label": "Ejecuciones: nuevos o changes",
+    "tipo": "proceso"
+   },
+   {
+    "id": "RL",
+    "label": "¿Filtro de relevancia?",
+    "tipo": "decision"
+   },
+   {
+    "id": "LLM",
+    "label": "Evaluar filas relevant:false",
+    "tipo": "proceso"
+   },
+   {
+    "id": "M",
+    "label": "Correo always · on_new",
+    "tipo": "io"
+   },
+   {
+    "id": "E1",
+    "label": "monitors_not_ enabled (T46)",
+    "tipo": "io"
+   },
+   {
+    "id": "E2",
+    "label": "schedule_faster_than_ source · tope 20",
+    "tipo": "io"
+   },
+   {
+    "id": "E3",
+    "label": "skipped_plan_limit · truncated",
+    "tipo": "io"
+   },
+   {
+    "id": "FOK",
+    "label": "Fin: alerta entregada",
+    "tipo": "terminador"
+   },
+   {
+    "id": "FER",
+    "label": "Fin: pedir acceso o corregir",
+    "tipo": "terminador"
+   }
+  ],
+  "recursos": [
+   {
+    "id": "R01",
+    "tipo": "api",
+    "detalle": "Llave de organización (Bearer croma_live_… u OAuth MCP)",
+    "criticidad": "ALTA",
+    "riesgo": "Da acceso total a la organización; rotar si se filtra",
+    "nodos": [
+     "EN"
+    ],
+    "remite": "Consola de Croma (emitir o rotar llaves)"
+   },
+   {
+    "id": "R02",
+    "tipo": "servicio",
+    "detalle": "Saldo de créditos del plan (10 vivo · 1 dataset)",
+    "criticidad": "ALTA",
+    "riesgo": "402 plan_limit_reached al agotarse",
+    "nodos": [
+     "FR",
+     "RU"
+    ],
+    "remite": "Plan y facturación; 402 al agotarse"
+   },
+   {
+    "id": "R03",
+    "tipo": "storage",
+    "detalle": "Copia dataset mantenida por Croma (as_of)",
+    "criticidad": "MEDIA",
+    "riesgo": "Rezago observado de 1 a 39 días según fuente",
+    "nodos": [
+     "CA"
+    ],
+    "remite": "Fuente oficial en el siguiente refresco"
+   },
+   {
+    "id": "R04",
+    "tipo": "servicio",
+    "detalle": "Portal oficial de la entidad colombiana",
+    "criticidad": "ALTA",
+    "riesgo": "Disponibilidad ajena; 5xx upstream_error",
+    "nodos": [
+     "FR"
+    ],
+    "remite": "Reintento idempotente o copia en caché"
+   },
+   {
+    "id": "R09",
+    "tipo": "modelo",
+    "detalle": "Agente o cliente MCP (Claude, ChatGPT, Cursor)",
+    "criticidad": "MEDIA",
+    "riesgo": "Contexto finito: respuestas extensas lo saturan",
+    "nodos": [
+     "Q"
+    ],
+    "remite": "Herramientas MCP del catálogo"
+   },
+   {
+    "id": "R13",
+    "tipo": "servicio",
+    "detalle": "Correo de notificación (1 a 3 destinatarios)",
+    "criticidad": "BAJA",
+    "riesgo": "Monitores en beta privada",
+    "nodos": [
+     "ASK",
+     "M"
+    ],
+    "remite": "Destinatarios (máx. 3) y baja por enlace"
+   },
+   {
+    "id": "R14",
+    "tipo": "modelo",
+    "detalle": "Filtro de relevancia en lenguaje natural",
+    "criticidad": "BAJA",
+    "riesgo": "Filas descartadas quedan con relevant:false",
+    "nodos": [
+     "RL",
+     "LLM"
+    ],
+    "remite": "list_monitor_matches (relevant:false)"
+   },
+   {
+    "id": "R15",
+    "tipo": "dato",
+    "detalle": "Catálogo y OpenAPI (/catalog, /openapi)",
+    "criticidad": "BAJA",
+    "riesgo": "Fuente de verdad de rutas y esquemas",
+    "nodos": [
+     "CR"
+    ],
+    "remite": "OpenAPI y /catalog"
+   }
+  ],
+  "validacion": {
+   "clave": "D16",
+   "titulo": "Monitores: alertas programadas por correo",
+   "checks": {
+    "nodos_no_alcanzables": [],
+    "nodos_sin_terminal": [],
+    "decisiones_incompletas": [],
+    "aristas_colgantes": [],
+    "nodos_aislados": [],
+    "recursos_faltantes": [],
+    "recursos_huerfanos": [],
+    "violaciones_dependencia_clean": [],
+    "ciclo_en_dag": false,
+    "categorias_sin_contraste": [
+     "decision",
+     "error_fallback",
+     "modelo_ia",
+     "proceso"
+    ]
+   },
+   "veredicto": "APROBADO_RENDER",
+   "nota": "Los recursos huérfanos y el contraste son ADVERTENCIA; el resto bloquea el render.",
+   "contraste_texto_elegido": {
+    "control_orquestacion": {
+     "fondo": "#332288",
+     "texto": "#FFFFFF",
+     "ratio": 12.17,
+     "pasa": true
+    },
+    "decision": {
+     "fondo": "#E69F00",
+     "texto": "#000000",
+     "ratio": 9.32,
+     "pasa": true
+    },
+    "entrada_salida": {
+     "fondo": "#0072B2",
+     "texto": "#FFFFFF",
+     "ratio": 5.19,
+     "pasa": true
+    },
+    "error_fallback": {
+     "fondo": "#D55E00",
+     "texto": "#000000",
+     "ratio": 5.43,
+     "pasa": true
+    },
+    "modelo_ia": {
+     "fondo": "#CC79A7",
+     "texto": "#000000",
+     "ratio": 6.86,
+     "pasa": true
+    },
+    "proceso": {
+     "fondo": "#009E73",
+     "texto": "#000000",
+     "ratio": 6.14,
+     "pasa": true
+    }
+   },
+   "rutas_error": 3,
+   "n_nodos": 17,
+   "n_aristas": 21,
+   "n_decisiones": 4,
+   "es_dag": true,
+   "layout": {
+    "estrategia": [
+     "filas",
+     false,
+     4,
+     true
+    ],
+    "ancho_in": 9.71,
+    "alto_in": 11.06,
+    "letra_efectiva_pt": 6.6
+   }
+  }
+ }
+]
